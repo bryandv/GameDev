@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Profile>Reach</Profile>
+  <Platform>Windows</Platform>
+  <Config />
+  <SourceFiles>
+    <File>D:/school/ap/2017-2018/Game_Devolopment/1game/Game1/Game1/Content/charactersprites.png</File>
+    <File>D:/school/ap/2017-2018/Game_Devolopment/1game/Game1/Game1/Content/char.png</File>
+    <File>D:/school/ap/2017-2018/Game_Devolopment/1game/Game1/Game1/Content/charx2.png</File>
+    <File>D:/school/ap/2017-2018/Game_Devolopment/1game/Game1/Game1/Content/charx15.png</File>
+    <File>D:/school/ap/2017-2018/Game_Devolopment/1game/Game1/Game1/Content/charx25.png</File>
+  </SourceFiles>
+</SourceFileCollection>
