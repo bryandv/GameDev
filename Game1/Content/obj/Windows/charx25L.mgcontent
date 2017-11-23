@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>D:/school/ap/2017-2018/Game_Devolopment/1game/Game1/Game1/Content/charx2.png</SourceFile>
-  <SourceTime>2017-11-23T02:08:02+01:00</SourceTime>
-  <DestFile>D:/school/ap/2017-2018/Game_Devolopment/1game/Game1/Game1/Content/bin/Windows/charx2.xnb</DestFile>
-  <DestTime>2017-11-23T02:11:31.9333498+01:00</DestTime>
+  <SourceFile>D:/school/ap/2017-2018/Game_Devolopment/1game/Game1/Game1/Content/charx25L.png</SourceFile>
+  <SourceTime>2017-11-23T18:39:44+01:00</SourceTime>
+  <DestFile>D:/school/ap/2017-2018/Game_Devolopment/1game/Game1/Game1/Content/bin/Windows/charx25L.xnb</DestFile>
+  <DestTime>2017-11-23T18:41:53.1498351+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2017-03-01T16:05:36+01:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

@@ -11,6 +11,8 @@ namespace Game1
     
    public class Hero
     {
+        private Texture2D _textureR;
+        private Texture2D _textureL;
         private Texture2D _texture;
         private Rectangle _viewRectangle;
         public Vector2 Positie;
@@ -20,15 +22,16 @@ namespace Game1
         public Vector2 VelocityX = new Vector2(2, 0);
 
 
-        public Hero(Texture2D texture)
+        public Hero(Texture2D textureR,Texture2D textureL)
         {
-            _texture = texture;
-
+            _textureR = textureR;
+            _textureL = textureL;
+            _texture = _textureR;
             Positie = new Vector2(100, 100);
             _animation = new Animation();
-            _animation.AddFrame(new Rectangle(0, 160, 80, 80));
-            _animation.AddFrame(new Rectangle(80, 160, 80, 80));
-            _animation.AddFrame(new Rectangle(160, 160, 80, 80));
+            _animation.AddFrame(new Rectangle(0, 0, 80, 80));
+            _animation.AddFrame(new Rectangle(80, 0, 80, 80));
+            _animation.AddFrame(new Rectangle(160, 0, 80, 80));
             _animation.AantalBewegingenPerSeconde = 8;
 
 
@@ -42,10 +45,17 @@ namespace Game1
         {
             _bediening.Update();
 
-
-            if (_bediening.left || _bediening.right)
+            
+            if (_bediening.left)
             {
-                _animation.Update(gameTime);    
+                _animation.Update(gameTime);
+                _texture = _textureL;
+            }
+
+            if (_bediening.right)
+            {
+                _animation.Update(gameTime);
+                _texture = _textureR;
             }
 
 

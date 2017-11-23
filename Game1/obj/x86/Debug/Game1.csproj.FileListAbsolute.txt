@@ -22,8 +22,6 @@ D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\obj\x86\Debug\Game1.cs
 D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\obj\x86\Debug\Game1.csproj.CoreCompileInputs.cache
 D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\obj\x86\Debug\Game1.exe
 D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\obj\x86\Debug\Game1.pdb
-D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\charactersprites.xnb
-D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\char.xnb
-D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\charx15.xnb
-D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\charx2.xnb
 D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\charx25.xnb
+D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\charx25L.xnb
+D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\charx25R.xnb

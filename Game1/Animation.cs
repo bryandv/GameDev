@@ -27,7 +27,9 @@ namespace Game1
             {
                 SourceRectangle = rectangle,
                 //Duration = duration
-            };            frames.Add(newFrame);
+            };
+
+            frames.Add(newFrame);
             CurrentFrame = frames[0];
             offset = CurrentFrame.SourceRectangle.Width;
             foreach (AnimationFrame f in frames)
@@ -53,6 +55,7 @@ namespace Game1
             }
             if (offset >= _totalWidth)
                 offset = 0;
-        }
+        }
+
     }
 }

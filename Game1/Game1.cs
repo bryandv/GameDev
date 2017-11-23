@@ -11,7 +11,8 @@ namespace Game1
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-       Texture2D _afbeelding;
+        Texture2D _afbeeldingR;
+        Texture2D _afbeeldingL;
         Hero _hero;
         public Game1()
         {
@@ -42,8 +43,9 @@ namespace Game1
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            _afbeelding = Content.Load<Texture2D>("charx25");
-            _hero = new Hero(_afbeelding);
+            _afbeeldingR = Content.Load<Texture2D>("charx25R");
+            _afbeeldingL = Content.Load<Texture2D>("charx25L");
+            _hero = new Hero(_afbeeldingR,_afbeeldingL);
             _hero._bediening = new BedieningPijltjes();
         }
 
