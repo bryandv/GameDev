@@ -25,3 +25,4 @@ D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\obj\x86\Debug\Game1.pd
 D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\charx25.xnb
 D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\charx25L.xnb
 D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\charx25R.xnb
+D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\tilesSpritesheet.xnb

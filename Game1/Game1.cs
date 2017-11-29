@@ -14,6 +14,16 @@ namespace Game1
         Texture2D _afbeeldingR;
         Texture2D _afbeeldingL;
         Hero _hero;
+        Blok _blok;
+        Camera2D camera;
+ 
+        Level level;
+
+        int afstand = 55;
+        Vector2 camPos = new Vector2();
+        float rotation = 0;
+        float zoom = 1;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -29,7 +39,7 @@ namespace Game1
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            camera = new Camera2D(GraphicsDevice.Viewport);
             base.Initialize();
         }
 
@@ -46,7 +56,16 @@ namespace Game1
             _afbeeldingR = Content.Load<Texture2D>("charx25R");
             _afbeeldingL = Content.Load<Texture2D>("charx25L");
             _hero = new Hero(_afbeeldingR,_afbeeldingL);
-            _hero._bediening = new BedieningPijltjes();
+           
+
+            Texture2D blokText = Content.Load<Texture2D>("tilesSpritesheet");
+            _blok = new Blok(blokText, new Vector2(0, 0+afstand));
+
+            level = new Level();
+            level.texture = blokText;
+            level.CreateWorld();
+
+
         }
 
         /// <summary>
@@ -69,6 +88,10 @@ namespace Game1
                 Exit();
 
             // TODO: Add your update logic here
+  
+
+            if (_hero.IsMoving)
+                camPos += _hero.VelocityX;
             _hero.Update(gameTime);
             base.Update(gameTime);
         }
@@ -82,9 +105,15 @@ namespace Game1
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            var viewMatrix = camera.GetViewMatrix();
+            camera.Position = camPos;
+            camera.Rotation = rotation;
+            camera.Zoom = zoom;
+
             // TODO: Add your drawing code here
-            spriteBatch.Begin();
+            spriteBatch.Begin(transformMatrix:viewMatrix);
             _hero.Draw(spriteBatch);
+            level.DrawWorld(spriteBatch);
             spriteBatch.End();
 
             

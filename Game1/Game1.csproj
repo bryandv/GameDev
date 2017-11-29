@@ -44,8 +44,11 @@
     <Compile Include="Animation.cs" />
     <Compile Include="AnimationFrame.cs" />
     <Compile Include="Bediening.cs" />
+    <Compile Include="Blok.cs" />
+    <Compile Include="Camera2D.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Hero.cs" />
+    <Compile Include="Level.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -60,6 +63,7 @@
     <Content Include="Content\charx25.png" />
     <Content Include="Content\charx25L.png" />
     <Content Include="Content\charx25R.png" />
+    <Content Include="Content\tilesSpritesheet.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
