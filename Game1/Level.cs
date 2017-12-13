@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Game1
 {
-    class Level
+    class Level 
     {
         public Texture2D texture;
         public byte[,] tileArray = new Byte[,]
@@ -17,7 +17,7 @@ namespace Game1
             {0,0,0,0,0,0,0,0,0 },
             {0,0,0,0,0,0,0,0,0 },
             {0,0,0,0,0,0,0,0,0 },
-            {0,0,0,0,0,1,1,0,0 },
+            {0,0,0,1,0,1,1,0,0 },
             {1,1,1,1,0,1,1,0,1 },
         };
 

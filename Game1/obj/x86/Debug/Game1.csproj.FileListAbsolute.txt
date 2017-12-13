@@ -26,3 +26,6 @@ D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\
 D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\charx25L.xnb
 D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\charx25R.xnb
 D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\tilesSpritesheet.xnb
+D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\Tile1.xnb
+D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\Tile2.xnb
+D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\Tile3.xnb

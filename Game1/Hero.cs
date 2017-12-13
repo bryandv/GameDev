@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Game1
 {
     
-   public class Hero
+   public class Hero : ICollide
     {
         Matrix m;
 
@@ -21,8 +21,10 @@ namespace Game1
         private Texture2D _textureL;
         private Texture2D _texture;
         private Rectangle _viewRectangle;
+        public Rectangle rectangle;
         public Vector2 Positie;
         public Bediening _bediening { get; set; }
+        public Rectangle CollisionRectangle;
 
         private Animation _animation;
         public Vector2 VelocityX = new Vector2(2, 0);
@@ -40,14 +42,15 @@ namespace Game1
             m = new Matrix();
             rotationYMatrix = Matrix.CreateRotationX((float)Math.PI / 2);
 
-            Positie = new Vector2(100, 275);
+            //Positie = new Vector2(100, 275);
             _animation = new Animation();
             _animation.AddFrame(new Rectangle(160, 0, 80, 80));
             _animation.AddFrame(new Rectangle(80, 0, 80, 80));
             _animation.AddFrame(new Rectangle(0, 0, 80, 80));
             _animation.AantalBewegingenPerSeconde = 10;
             _bediening = new BedieningPijltjes();
-            hasJumped = false;
+            hasJumped = true;
+            CollisionRectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 64, 205);
             // _viewRectangle = new Rectangle(0, 160, 80, 80);
             //  _bediening = new BedieningPijltjes();
         }
@@ -56,10 +59,17 @@ namespace Game1
 
         public void Update(GameTime gameTime)
         {
+            Positie += VelocityX;
             KeyboardState stateKey = Keyboard.GetState();
-
-            _bediening.Update();
-
+            rectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 75,80);
+           
+            Input(gameTime);
+            if (VelocityX.Y < 10)
+            {
+                VelocityX.Y += 0.4f;
+            }
+            #region test
+            /*
 
             if (_bediening.left)
             {
@@ -78,17 +88,17 @@ namespace Game1
 
 
             if (_bediening.left)
-                VelocityX.X = -2;
+                VelocityX.X = -2f;
             //Positie -= VelocityX;
             else if (_bediening.right)
-                VelocityX.X = 2;
+                VelocityX.X = 2f;
             //Positie += VelocityX;
             else
-                VelocityX.X = 0;
-            Positie += VelocityX;
+                VelocityX.X = 0f;
+           
             
 
-            if (hasJumped)
+            /*if (hasJumped)
             {
                 Positie.Y += jumpspeed;
                 jumpspeed += 1;
@@ -100,7 +110,7 @@ namespace Game1
             }
             else
             {
-                if(stateKey.IsKeyDown(Keys.Up))
+                if(stateKey.IsKeyDown(Keys.Up) && hasJumped == false)
                 {
                     hasJumped = true;
                     jumpspeed = -20;
@@ -108,10 +118,13 @@ namespace Game1
                 }
             }
 
+            if (Positie.Y + _texture.Height >= 450)
+                hasJumped = false;
 
 
 
-            /*if ((stateKey.IsKeyDown(Keys.Space)) && (hasJumped == false))
+
+            if ((stateKey.IsKeyDown(Keys.Up)) && (hasJumped == false))
             {
                 Positie.Y -= 10f;
                 VelocityX.Y = -5f;
@@ -121,10 +134,10 @@ namespace Game1
             if(hasJumped == true)
             {
                 float i = 1;
-                VelocityX.Y += 0.15f * 1;
+                VelocityX.Y += 0.15f *i;
             }
             
-            if(Positie.Y + _texture.Height >= 450)
+            if(Positie.Y + _texture.Height >= 400)
             {
                 hasJumped = false;
             }
@@ -132,7 +145,79 @@ namespace Game1
             if (hasJumped == false)
             {
                 VelocityX.Y = 0f;
-            }*/
+            }
+            */
+
+            #endregion
+        }
+
+        private void Input(GameTime gameTime)
+        {
+            _bediening.Update();
+            if (_bediening.left)
+            {
+                _animation.Update(gameTime);
+                VelocityX.X = 2f;
+                IsMoving = true;
+            }
+            else if (_bediening.right)
+            {
+                _animation.Update(gameTime);
+                VelocityX.X = -2f;
+                IsMoving = true;
+            }
+            else
+                VelocityX.X = 0f;
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) && hasJumped == false)
+            {
+                Positie.Y -= 5f;
+                VelocityX.Y = -9f;
+                hasJumped = true;
+            }
+        }
+
+        public void Collision(Rectangle newRectangle, int xoffset, int yoffset)
+        {
+            if (rectangle.TouchTopOf(newRectangle))
+            {
+                rectangle.Y = newRectangle.Y - rectangle.Height;
+                VelocityX.Y = 0f;
+                hasJumped = false;
+            }
+
+            if (rectangle.TouchLeftOf(newRectangle))
+            {
+                Positie.X = newRectangle.X - rectangle.Width - 2;
+                IsMoving = false;
+            }
+
+            if (rectangle.TouchRightOf(newRectangle))
+            {
+                Positie.X = newRectangle.X + rectangle.Width + 2;
+                IsMoving = false;
+            }
+
+            if (rectangle.TouchBottomOf(newRectangle))
+            {
+                VelocityX.Y = 1f;
+            }
+
+
+            if (Positie.X < 0)
+            { Positie.X = 0;
+                IsMoving = false;
+            } 
+            if (Positie.X > xoffset - rectangle.Width)
+            { Positie.X = xoffset - rectangle.Width;
+                IsMoving = false;
+            } 
+            if (Positie.Y < 0) VelocityX.Y = 1f;
+            if (Positie.Y > yoffset - rectangle.Height)
+            { Positie.Y = yoffset - rectangle.Height;
+                IsMoving = false;
+            } 
+
 
         }
 
@@ -140,6 +225,13 @@ namespace Game1
         {
             spriteBatch.Draw(_texture, Positie, _animation.CurrentFrame.SourceRectangle, Color.White);
         }
-     
+
+
+        public Rectangle GetCollisionRectangle()
+        {
+            return CollisionRectangle;
+        }
+
+
     }
 }

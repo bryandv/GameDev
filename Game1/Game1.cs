@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Game1
 {
@@ -16,7 +17,8 @@ namespace Game1
         Hero _hero;
         Blok _blok;
         Camera2D camera;
- 
+        Map map;
+        List<ICollide> collideObjecten;
         Level level;
 
         int afstand = 55;
@@ -40,6 +42,8 @@ namespace Game1
         {
             // TODO: Add your initialization logic here
             camera = new Camera2D(GraphicsDevice.Viewport);
+            map = new Map();
+         
             base.Initialize();
         }
 
@@ -56,14 +60,29 @@ namespace Game1
             _afbeeldingR = Content.Load<Texture2D>("charx25R");
             _afbeeldingL = Content.Load<Texture2D>("charx25L");
             _hero = new Hero(_afbeeldingR,_afbeeldingL);
-           
+            Tiles.Content = Content;
 
-            Texture2D blokText = Content.Load<Texture2D>("tilesSpritesheet");
-            _blok = new Blok(blokText, new Vector2(0, 0+afstand));
+            map.Generate(new int[,]{
+            {0,0,0,0,0,0,0,0,0 },
+            {0,0,0,0,0,0,0,0,0 },
+            {0,0,0,0,0,0,0,0,0 },
+            {0,0,0,0,0,0,0,0,0 },
+            {0,0,0,0,3,0,0,1,0 },
+            {0,0,0,3,2,0,0,0,0 },
+            {3,3,3,2,2,3,3,3,3 },
+            }, 71);
+             Texture2D blokText = Content.Load<Texture2D>("tilesSpritesheet");
+             _blok = new Blok(blokText, new Vector2(0, 0+afstand));
 
-            level = new Level();
-            level.texture = blokText;
-            level.CreateWorld();
+             level = new Level();
+             level.texture = blokText;
+             level.CreateWorld();
+
+            collideObjecten = new List<ICollide>();
+            collideObjecten.Add(_hero);
+             
+            
+            
 
 
         }
@@ -88,10 +107,20 @@ namespace Game1
                 Exit();
 
             // TODO: Add your update logic here
-  
+
+            foreach (CollisionTiles tile in map.CollisionTiles)
+            {
+                _hero.Collision(tile.Rectangle, map.Width, map.Height);
+            }
+
+
+
+
 
             if (_hero.IsMoving)
-                camPos += _hero.VelocityX;
+                camPos.X += _hero.VelocityX.X;
+            
+
             _hero.Update(gameTime);
             base.Update(gameTime);
         }
@@ -105,15 +134,16 @@ namespace Game1
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            var viewMatrix = camera.GetViewMatrix();
-            camera.Position = camPos;
-            camera.Rotation = rotation;
-            camera.Zoom = zoom;
+             var viewMatrix = camera.GetViewMatrix();
+              camera.Position = camPos;
+             camera.Rotation = rotation;
+              camera.Zoom = zoom;
 
             // TODO: Add your drawing code here
             spriteBatch.Begin(transformMatrix:viewMatrix);
+           // spriteBatch.Begin();
             _hero.Draw(spriteBatch);
-            level.DrawWorld(spriteBatch);
+            map.Draw(spriteBatch);
             spriteBatch.End();
 
             

@@ -48,9 +48,13 @@
     <Compile Include="Camera2D.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Hero.cs" />
+    <Compile Include="ICollide.cs" />
     <Compile Include="Level.cs" />
+    <Compile Include="Map.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RectangleHelper.cs" />
+    <Compile Include="Tiles.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -63,6 +67,8 @@
     <Content Include="Content\charx25.png" />
     <Content Include="Content\charx25L.png" />
     <Content Include="Content\charx25R.png" />
+    <Content Include="Content\Tile1.png" />
+    <Content Include="Content\Tile2.png" />
     <Content Include="Content\tilesSpritesheet.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
