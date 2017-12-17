@@ -17,7 +17,6 @@ namespace Game1
         Matrix rotationYMatrix;
 
         private Texture2D _textureR;
-
         private Texture2D _textureL;
         private Texture2D _texture;
         private Rectangle _viewRectangle;
@@ -28,9 +27,10 @@ namespace Game1
 
         private Animation _animation;
         public Vector2 VelocityX = new Vector2(2, 0);
-        public float startY,jumpspeed = 0;
+       // public float startY,jumpspeed = 0;
         bool hasJumped;
         public bool IsMoving = false;
+        public bool IsDead = false;
 
     
         public Hero(Texture2D textureR,Texture2D textureL)
@@ -42,7 +42,7 @@ namespace Game1
             m = new Matrix();
             rotationYMatrix = Matrix.CreateRotationX((float)Math.PI / 2);
 
-            //Positie = new Vector2(100, 275);
+            Positie = new Vector2(100, 0);
             _animation = new Animation();
             _animation.AddFrame(new Rectangle(160, 0, 80, 80));
             _animation.AddFrame(new Rectangle(80, 0, 80, 80));
@@ -51,8 +51,7 @@ namespace Game1
             _bediening = new BedieningPijltjes();
             hasJumped = true;
             CollisionRectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 64, 205);
-            // _viewRectangle = new Rectangle(0, 160, 80, 80);
-            //  _bediening = new BedieningPijltjes();
+  
         }
 
 
@@ -64,10 +63,21 @@ namespace Game1
             rectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 75,80);
            
             Input(gameTime);
-            if (VelocityX.Y < 10)
+            /*if (VelocityX.Y < 10)
             {
                 VelocityX.Y += 0.4f;
+            }*/
+
+            if (IsDead == false)
+                VelocityX.Y += 0.4f;
+            if(IsDead == true)
+            {
+                Positie = new Vector2(100, 100);
+                IsDead = false;
             }
+
+
+
             #region test
             /*
 
@@ -154,25 +164,27 @@ namespace Game1
         private void Input(GameTime gameTime)
         {
             _bediening.Update();
-            if (_bediening.left)
+            if (_bediening.right)
             {
                 _animation.Update(gameTime);
                 VelocityX.X = 2f;
                 IsMoving = true;
+                _texture = _textureR;
             }
-            else if (_bediening.right)
+            else if (_bediening.left)
             {
                 _animation.Update(gameTime);
                 VelocityX.X = -2f;
                 IsMoving = true;
+                _texture = _textureL;
             }
             else
                 VelocityX.X = 0f;
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Space) && hasJumped == false)
+            if (Keyboard.GetState().IsKeyDown(Keys.Up) && hasJumped == false)
             {
                 Positie.Y -= 5f;
-                VelocityX.Y = -9f;
+                VelocityX.Y = -12f;
                 hasJumped = true;
             }
         }
@@ -211,14 +223,30 @@ namespace Game1
             if (Positie.X > xoffset - rectangle.Width)
             { Positie.X = xoffset - rectangle.Width;
                 IsMoving = false;
+            }
+            if (Positie.Y < 0)
+            {
+                VelocityX.Y = 1f;
+                
             } 
-            if (Positie.Y < 0) VelocityX.Y = 1f;
             if (Positie.Y > yoffset - rectangle.Height)
-            { Positie.Y = yoffset - rectangle.Height;
-                IsMoving = false;
+            {
+                //Positie.Y = yoffset - rectangle.Height;
+                // IsMoving = false;
+                IsDead = true;
+                //Positie = new Vector2(100, 100);
+                
             } 
 
 
+        }
+
+        public void CollisionEnemy(Rectangle newRectangle)
+        {
+            if(rectangle.TouchLeftOf(newRectangle))
+            {
+                IsDead = true;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

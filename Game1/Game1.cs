@@ -12,9 +12,12 @@ namespace Game1
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Texture2D _afbeeldingR;
-        Texture2D _afbeeldingL;
+        Texture2D Hero_afbeeldingR;
+        Texture2D Hero_afbeeldingL;
+        Texture2D Enemy_afbeeldingR;
+        Texture2D Enemy_afbeeldingL;
         Hero _hero;
+        Enemy _Enemy;
         Blok _blok;
         Camera2D camera;
         Map map;
@@ -57,26 +60,32 @@ namespace Game1
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            _afbeeldingR = Content.Load<Texture2D>("charx25R");
-            _afbeeldingL = Content.Load<Texture2D>("charx25L");
-            _hero = new Hero(_afbeeldingR,_afbeeldingL);
+            Hero_afbeeldingR = Content.Load<Texture2D>("charx25R");
+            Hero_afbeeldingL = Content.Load<Texture2D>("charx25L");
+            _hero = new Hero(Hero_afbeeldingR, Hero_afbeeldingL);
+
+            Enemy_afbeeldingL = Content.Load<Texture2D>("Enemyx2L");
+            Enemy_afbeeldingR = Content.Load<Texture2D>("Enemyx2R");
+            _Enemy = new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL);
+
+
             Tiles.Content = Content;
 
             map.Generate(new int[,]{
-            {0,0,0,0,0,0,0,0,0 },
-            {0,0,0,0,0,0,0,0,0 },
-            {0,0,0,0,0,0,0,0,0 },
-            {0,0,0,0,0,0,0,0,0 },
-            {0,0,0,0,3,0,0,1,0 },
-            {0,0,0,3,2,0,0,0,0 },
-            {3,3,3,2,2,3,3,3,3 },
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+            {0,0,0,0,3,0,0,1,0,0,0,0,0,0,0,0,0,0 },
+            {0,0,0,3,2,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+            {5,3,3,2,2,3,3,3,4,0,0,5,3,3,3,3,3,3 },
             }, 71);
              Texture2D blokText = Content.Load<Texture2D>("tilesSpritesheet");
              _blok = new Blok(blokText, new Vector2(0, 0+afstand));
 
-             level = new Level();
+            /* level = new Level();
              level.texture = blokText;
-             level.CreateWorld();
+             level.CreateWorld();*/
 
             collideObjecten = new List<ICollide>();
             collideObjecten.Add(_hero);
@@ -113,15 +122,23 @@ namespace Game1
                 _hero.Collision(tile.Rectangle, map.Width, map.Height);
             }
 
+            _hero.CollisionEnemy(_Enemy.rectangle);
+
 
 
 
 
             if (_hero.IsMoving)
                 camPos.X += _hero.VelocityX.X;
+            if (_hero.IsDead)
+            {
+                camPos.X = 0;
+             //  _hero.Positie = new Vector2(100, 100);
+            } 
             
 
             _hero.Update(gameTime);
+            _Enemy.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -143,6 +160,7 @@ namespace Game1
             spriteBatch.Begin(transformMatrix:viewMatrix);
            // spriteBatch.Begin();
             _hero.Draw(spriteBatch);
+            _Enemy.Draw(spriteBatch);
             map.Draw(spriteBatch);
             spriteBatch.End();
 
