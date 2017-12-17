@@ -244,7 +244,6 @@ namespace Game1
         public void CollisionEnemy(Rectangle newRectangle)
         {
            
-
             if(rectangle.TouchLeftOf(newRectangle))
             {
                 IsDead = true;

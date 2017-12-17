@@ -128,6 +128,8 @@ namespace Game1
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            _hero.Update(gameTime);
+            MovingTile.Update(gameTime);
             // TODO: Add your update logic here
 
             foreach (CollisionTiles tile in map.CollisionTiles)
@@ -135,12 +137,18 @@ namespace Game1
                 _hero.Collision(tile.Rectangle, map.Width, map.Height);
             }
 
-           // _hero.CollisionEnemy(_Enemy.rectangle);
+            _hero.CollisionEnemy(_Enemy.rectangle);
             _hero.CollisionMovingTiles(MovingTile.rectangle);
-            if(RectangleHelper.TouchTopOf(_hero.rectangle,_Enemy.rectangle))
-             {
+           
+            if (_hero.rectangle.TouchTopOf(_Enemy.rectangle))
+            {
                 _Enemy.isAlive = false;
-             }
+            }
+            else
+            {
+                _Enemy.Update(gameTime);
+                _hero.CollisionEnemy(_Enemy.rectangle);
+            }
 
 
 
@@ -152,9 +160,7 @@ namespace Game1
             } 
             
 
-            _hero.Update(gameTime);
-            _Enemy.Update(gameTime);
-            MovingTile.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -176,6 +182,7 @@ namespace Game1
             spriteBatch.Begin(transformMatrix:viewMatrix);
            // spriteBatch.Begin();
             _hero.Draw(spriteBatch);
+
             if(_Enemy.isAlive)
             _Enemy.Draw(spriteBatch);
 

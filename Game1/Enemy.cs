@@ -13,13 +13,14 @@ namespace Game1
         private Texture2D _textureR;
         private Texture2D _textureL;
         private Texture2D _texture;
-        public bool isAlive = true;
+        public bool isAlive;
         public Rectangle rectangle;
         public Vector2 Positie;
         private Animation _animation;
         private int speed = 1;
         private bool border = true;
         public Vector2 VelocityX = new Vector2(0, 0);
+
         public Enemy(Texture2D textureR, Texture2D textureL)
         {
             _textureR = textureR;
@@ -33,13 +34,13 @@ namespace Game1
             
             _animation.AantalBewegingenPerSeconde = 8;
             Positie = new Vector2(801, 365);
-            
+            isAlive = true;
            // CollisionRectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 64, 205);
 
         }
         public void Update(GameTime gametime)
         {
-            if(isAlive)
+            if (isAlive)
             {
                 if (border)
                 {
@@ -61,6 +62,12 @@ namespace Game1
 
                 rectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 60, 60);
             }
+            else
+            {
+               // Positie = new Vector2(0, 0);
+                rectangle = new Rectangle(0, 0, 0, 0);
+            }
+                
 
 
         }
