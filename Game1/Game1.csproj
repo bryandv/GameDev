@@ -52,6 +52,7 @@
     <Compile Include="ICollide.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="MovingTiles.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RectangleHelper.cs" />
@@ -75,6 +76,7 @@
     <Content Include="Content\Tile3.png" />
     <Content Include="Content\Tile4.png" />
     <Content Include="Content\Tile5.png" />
+    <Content Include="Content\TileMove.png" />
     <Content Include="Content\tilesSpritesheet.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>

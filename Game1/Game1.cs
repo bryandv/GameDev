@@ -12,16 +12,25 @@ namespace Game1
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        #region Texture Variabele
         Texture2D Hero_afbeeldingR;
         Texture2D Hero_afbeeldingL;
         Texture2D Enemy_afbeeldingR;
         Texture2D Enemy_afbeeldingL;
+        Texture2D MovingTile_afbeelding;
+        #endregion
+
+        #region Wereld Variabele
         Hero _hero;
         Enemy _Enemy;
-        Blok _blok;
-        Camera2D camera;
+        MovingTiles MovingTile;
         Map map;
-        List<ICollide> collideObjecten;
+        //Blok _blok;
+        Camera2D camera;
+        #endregion
+
+        //List<ICollide> collideObjecten;
         Level level;
 
         int afstand = 55;
@@ -68,27 +77,31 @@ namespace Game1
             Enemy_afbeeldingR = Content.Load<Texture2D>("Enemyx2R");
             _Enemy = new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL);
 
+            MovingTile_afbeelding = Content.Load<Texture2D>("TileMove");
+            MovingTile = new MovingTiles(MovingTile_afbeelding,1051,200,1050,1500);
 
             Tiles.Content = Content;
 
             map.Generate(new int[,]{
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-            {0,0,0,0,3,0,0,1,0,0,0,0,0,0,0,0,0,0 },
-            {0,0,0,3,2,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-            {5,3,3,2,2,3,3,3,4,0,0,5,3,3,3,3,3,3 },
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,3,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {5,3,3,2,2,2,3,3,4,0,0,5,3,3,3,3,3,3,4,0,0,0,0,5,3,3,3,3,3,3,4,0,0,0,0},
             }, 71);
-             Texture2D blokText = Content.Load<Texture2D>("tilesSpritesheet");
-             _blok = new Blok(blokText, new Vector2(0, 0+afstand));
+
+
+             //Texture2D blokText = Content.Load<Texture2D>("tilesSpritesheet");
+             //_blok = new Blok(blokText, new Vector2(0, 0+afstand));
 
             /* level = new Level();
              level.texture = blokText;
-             level.CreateWorld();*/
+             level.CreateWorld();
 
             collideObjecten = new List<ICollide>();
-            collideObjecten.Add(_hero);
+            collideObjecten.Add(_hero);*/
              
             
             
@@ -122,9 +135,12 @@ namespace Game1
                 _hero.Collision(tile.Rectangle, map.Width, map.Height);
             }
 
-            _hero.CollisionEnemy(_Enemy.rectangle);
-
-
+           // _hero.CollisionEnemy(_Enemy.rectangle);
+            _hero.CollisionMovingTiles(MovingTile.rectangle);
+            if(RectangleHelper.TouchTopOf(_hero.rectangle,_Enemy.rectangle))
+             {
+                _Enemy.isAlive = false;
+             }
 
 
 
@@ -133,12 +149,12 @@ namespace Game1
             if (_hero.IsDead)
             {
                 camPos.X = 0;
-             //  _hero.Positie = new Vector2(100, 100);
             } 
             
 
             _hero.Update(gameTime);
             _Enemy.Update(gameTime);
+            MovingTile.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -160,8 +176,11 @@ namespace Game1
             spriteBatch.Begin(transformMatrix:viewMatrix);
            // spriteBatch.Begin();
             _hero.Draw(spriteBatch);
+            if(_Enemy.isAlive)
             _Enemy.Draw(spriteBatch);
+
             map.Draw(spriteBatch);
+            MovingTile.Draw(spriteBatch);
             spriteBatch.End();
 
             

@@ -13,11 +13,11 @@ namespace Game1
         private Texture2D _textureR;
         private Texture2D _textureL;
         private Texture2D _texture;
-
+        public bool isAlive = true;
         public Rectangle rectangle;
         public Vector2 Positie;
         private Animation _animation;
-        private int Distance = 1;
+        private int speed = 1;
         private bool border = true;
         public Vector2 VelocityX = new Vector2(0, 0);
         public Enemy(Texture2D textureR, Texture2D textureL)
@@ -39,43 +39,34 @@ namespace Game1
         }
         public void Update(GameTime gametime)
         {
-            Positie += VelocityX;
-            if (border)
+            if(isAlive)
             {
-                Positie.X += 1;
-                _animation.Update(gametime);
-                _texture = _textureR;
+                if (border)
+                {
+                    Positie.X += speed;
+                    _animation.Update(gametime);
+                    _texture = _textureR;
+                }
+
+                else
+                {
+                    Positie.X -= speed;
+                    _animation.Update(gametime);
+                    _texture = _textureL;
+                }
+
+
+                if ((Positie.X > 1050) || (Positie.X < 800))
+                    border = !border;
+
+                rectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 60, 60);
             }
-               
-            else
-            {
-                Positie.X -= 1;
-                _animation.Update(gametime);
-                _texture = _textureL;
-            }
-                
-
-            if ((Positie.X > 1050) || (Positie.X < 800))
-                border = !border;
-
-            rectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 60, 60);
 
 
-            /* for (int i = 0; i < Distance; i++)
-             {
-                 _animation.Update(gametime);
-                 VelocityX.X ++;
-                 _texture = _textureR;
-             }*/
-            /* for (int j = 0; j < Distance; j++)
-             {
-                 _animation.Update(gametime);
-                 Positie.X -= 1;
-                 _texture = _textureL;
-             }*/
         }
         public void Draw(SpriteBatch spriteBatch)
         {
+            
             spriteBatch.Draw(_texture, Positie, _animation.CurrentFrame.SourceRectangle, Color.White);
         }
 

@@ -243,9 +243,21 @@ namespace Game1
 
         public void CollisionEnemy(Rectangle newRectangle)
         {
+           
+
             if(rectangle.TouchLeftOf(newRectangle))
             {
                 IsDead = true;
+            }
+        }
+
+        public void CollisionMovingTiles(Rectangle newRectangle)
+        {
+            if(rectangle.TouchTopOf(newRectangle))
+            {
+                rectangle.Y = newRectangle.Y - rectangle.Height;
+                VelocityX.Y = 0f;
+                hasJumped = false;
             }
         }
 
