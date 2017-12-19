@@ -19,6 +19,7 @@ namespace Game1
         Texture2D Enemy_afbeeldingR;
         Texture2D Enemy_afbeeldingL;
         Texture2D MovingTile_afbeelding;
+        Texture2D coin_afbeelding;
         #endregion
 
         #region Wereld Variabele
@@ -28,6 +29,7 @@ namespace Game1
         Map map;
         //Blok _blok;
         Camera2D camera;
+        coin _coin;
         #endregion
 
         //List<ICollide> collideObjecten;
@@ -75,10 +77,14 @@ namespace Game1
 
             Enemy_afbeeldingL = Content.Load<Texture2D>("Enemyx2L");
             Enemy_afbeeldingR = Content.Load<Texture2D>("Enemyx2R");
-            _Enemy = new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL);
+            _Enemy = new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL,801,365,800,1050);
 
             MovingTile_afbeelding = Content.Load<Texture2D>("TileMove");
             MovingTile = new MovingTiles(MovingTile_afbeelding,1051,200,1050,1500);
+
+            coin_afbeelding = Content.Load<Texture2D>("coin2");
+            _coin = new coin(coin_afbeelding, 295,210);
+
 
             Tiles.Content = Content;
 
@@ -130,19 +136,22 @@ namespace Game1
 
             _hero.Update(gameTime);
             MovingTile.Update(gameTime);
+            _coin.Update(gameTime);
             // TODO: Add your update logic here
-
+            #region Collision World
             foreach (CollisionTiles tile in map.CollisionTiles)
-            {
                 _hero.Collision(tile.Rectangle, map.Width, map.Height);
-            }
+            
 
             _hero.CollisionEnemy(_Enemy.rectangle);
             _hero.CollisionMovingTiles(MovingTile.rectangle);
+          
            
             if (_hero.rectangle.TouchTopOf(_Enemy.rectangle))
             {
                 _Enemy.isAlive = false;
+                _hero.Positie.Y -= 5f;
+                _hero.VelocityX.Y = -12f;
             }
             else
             {
@@ -150,14 +159,18 @@ namespace Game1
                 _hero.CollisionEnemy(_Enemy.rectangle);
             }
 
+            if(_hero.rectangle.TouchLeftOf(_coin.rectangle))
+            {
+                _coin.OnScreen = false;
+            }
+            #endregion
 
 
             if (_hero.IsMoving)
                 camPos.X += _hero.VelocityX.X;
             if (_hero.IsDead)
-            {
                 camPos.X = 0;
-            } 
+             
             
 
 
@@ -182,7 +195,7 @@ namespace Game1
             spriteBatch.Begin(transformMatrix:viewMatrix);
            // spriteBatch.Begin();
             _hero.Draw(spriteBatch);
-
+            _coin.Draw(spriteBatch);
             if(_Enemy.isAlive)
             _Enemy.Draw(spriteBatch);
 

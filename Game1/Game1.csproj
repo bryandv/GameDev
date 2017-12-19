@@ -46,6 +46,7 @@
     <Compile Include="Bediening.cs" />
     <Compile Include="Blok.cs" />
     <Compile Include="Camera2D.cs" />
+    <Compile Include="coin.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Hero.cs" />
@@ -69,6 +70,8 @@
     <Content Include="Content\charx25.png" />
     <Content Include="Content\charx25L.png" />
     <Content Include="Content\charx25R.png" />
+    <Content Include="Content\coin.png" />
+    <Content Include="Content\coin2.png" />
     <Content Include="Content\Enemyx2L.png" />
     <Content Include="Content\Enemyx2R.png" />
     <Content Include="Content\Tile1.png" />

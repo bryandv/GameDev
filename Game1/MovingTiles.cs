@@ -15,7 +15,7 @@ namespace Game1
         private int min_border_pos, max_border_pos;
         public Rectangle rectangle;
         public Vector2 Positie;
-        private int speed = 1;
+        private int speed = 2;
         public MovingTiles(Texture2D texture, int PositieX, int PositieY,int  MinBorderPos, int MaxBorderPos)
         {
             _texture = texture;

@@ -28,7 +28,7 @@ namespace Game1
         private Animation _animation;
         public Vector2 VelocityX = new Vector2(2, 0);
        // public float startY,jumpspeed = 0;
-        bool hasJumped;
+        public bool hasJumped;
         public bool IsMoving = false;
         public bool IsDead = false;
 

@@ -34,3 +34,5 @@ D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\
 D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\Enemyx2L.xnb
 D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\Enemyx2R.xnb
 D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\TileMove.xnb
+D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\coin.xnb
+D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\coin2.xnb

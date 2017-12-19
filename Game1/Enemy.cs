@@ -20,12 +20,16 @@ namespace Game1
         private int speed = 1;
         private bool border = true;
         public Vector2 VelocityX = new Vector2(0, 0);
+        int _MinBorderPos, _MaxBorderPos;
 
-        public Enemy(Texture2D textureR, Texture2D textureL)
+        public Enemy(Texture2D textureR, Texture2D textureL,int PositieX, int PositieY,int MinBorderPos,int MaxBorderPos)
         {
             _textureR = textureR;
             _textureL = textureL;
             _texture = _textureR;
+
+            _MinBorderPos = MinBorderPos;
+            _MaxBorderPos = MaxBorderPos;
 
             _animation = new Animation();
             _animation.AddFrame(new Rectangle(120, 0, 60, 60));
@@ -33,7 +37,7 @@ namespace Game1
             _animation.AddFrame(new Rectangle(0, 0, 60, 60));
             
             _animation.AantalBewegingenPerSeconde = 8;
-            Positie = new Vector2(801, 365);
+            Positie = new Vector2(PositieX, PositieY);
             isAlive = true;
            // CollisionRectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 64, 205);
 
@@ -57,7 +61,7 @@ namespace Game1
                 }
 
 
-                if ((Positie.X > 1050) || (Positie.X < 800))
+                if ((Positie.X > _MaxBorderPos) || (Positie.X < _MinBorderPos))
                     border = !border;
 
                 rectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 60, 60);
