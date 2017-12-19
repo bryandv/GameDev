@@ -31,6 +31,7 @@ namespace Game1
         public bool hasJumped;
         public bool IsMoving = false;
         public bool IsDead = false;
+        public int Score = 0;
 
     
         public Hero(Texture2D textureR,Texture2D textureL)
@@ -245,6 +246,10 @@ namespace Game1
         {
            
             if(rectangle.TouchLeftOf(newRectangle))
+            {
+                IsDead = true;
+            }
+            if (rectangle.TouchRightOf(newRectangle))
             {
                 IsDead = true;
             }

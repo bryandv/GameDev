@@ -24,12 +24,15 @@ namespace Game1
 
         #region Wereld Variabele
         Hero _hero;
-        Enemy _Enemy;
+     
         MovingTiles MovingTile;
         Map map;
         //Blok _blok;
         Camera2D camera;
-        coin _coin;
+        List<coin> coins = new List<coin>();
+        List<Enemy> _Enemys = new List<Enemy>();
+        private SpriteFont font;
+
         #endregion
 
         //List<ICollide> collideObjecten;
@@ -77,14 +80,20 @@ namespace Game1
 
             Enemy_afbeeldingL = Content.Load<Texture2D>("Enemyx2L");
             Enemy_afbeeldingR = Content.Load<Texture2D>("Enemyx2R");
-            _Enemy = new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL,801,365,800,1050);
+            
+            _Enemys.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 801, 365, 800, 1050));
+            _Enemys.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 1621, 365, 1620, 2000));
 
             MovingTile_afbeelding = Content.Load<Texture2D>("TileMove");
             MovingTile = new MovingTiles(MovingTile_afbeelding,1051,200,1050,1500);
 
             coin_afbeelding = Content.Load<Texture2D>("coin2");
-            _coin = new coin(coin_afbeelding, 295,210);
-
+            
+            coins.Add(new coin(coin_afbeelding, 295, 210));
+            coins.Add(new coin(coin_afbeelding, 690, 300));
+            coins.Add(new coin(coin_afbeelding, 1500, 150));
+            coins.Add(new coin(coin_afbeelding, 1900, 220));
+            font = Content.Load<SpriteFont>("Score");
 
             Tiles.Content = Content;
 
@@ -125,8 +134,55 @@ namespace Game1
         }
 
         /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
+        public void Collisions()
+        {
+            // Collisions voor tiles, enemys en coins in de wereld
+            #region Tiles
+            foreach (CollisionTiles tile in map.CollisionTiles)
+                _hero.Collision(tile.Rectangle, map.Width, map.Height);
+
+            _hero.CollisionMovingTiles(MovingTile.rectangle);
+            #endregion
+            #region enemys
+            foreach (Enemy enemy in _Enemys)
+                _hero.CollisionEnemy(enemy.rectangle);
+
+            foreach (Enemy enemy in _Enemys)
+            {
+                if (_hero.rectangle.TouchTopOf(enemy.rectangle))
+                {
+                    enemy.isAlive = false;
+                    _hero.Positie.Y -= 5f;
+                    _hero.VelocityX.Y = -12f;
+                }
+            }
+            #endregion 
+            #region coins
+            foreach (coin coin in coins)
+            {
+                if (_hero.rectangle.TouchLeftOf(coin.rectangle))
+                {
+                    coin.OnScreen = false;
+                    _hero.Score++;
+                }
+                if (_hero.rectangle.TouchBottomOf(coin.rectangle))
+                {
+                    coin.OnScreen = false;
+                    _hero.Score++;
+                }
+                if (_hero.rectangle.TouchRightOf(coin.rectangle))
+                {
+                    coin.OnScreen = false;
+                    _hero.Score++;
+                }
+                if (_hero.rectangle.TouchTopOf(coin.rectangle))
+                {
+                    coin.OnScreen = false;
+                    _hero.Score++;
+                }
+            }
+            #endregion
+        }
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
@@ -136,34 +192,15 @@ namespace Game1
 
             _hero.Update(gameTime);
             MovingTile.Update(gameTime);
-            _coin.Update(gameTime);
-            // TODO: Add your update logic here
-            #region Collision World
-            foreach (CollisionTiles tile in map.CollisionTiles)
-                _hero.Collision(tile.Rectangle, map.Width, map.Height);
-            
 
-            _hero.CollisionEnemy(_Enemy.rectangle);
-            _hero.CollisionMovingTiles(MovingTile.rectangle);
-          
+            foreach(Enemy enemy in _Enemys)
+              enemy.Update(gameTime);
+
+            foreach (coin coin in coins)
+                coin.Update(gameTime);
+
+            Collisions();
            
-            if (_hero.rectangle.TouchTopOf(_Enemy.rectangle))
-            {
-                _Enemy.isAlive = false;
-                _hero.Positie.Y -= 5f;
-                _hero.VelocityX.Y = -12f;
-            }
-            else
-            {
-                _Enemy.Update(gameTime);
-                _hero.CollisionEnemy(_Enemy.rectangle);
-            }
-
-            if(_hero.rectangle.TouchLeftOf(_coin.rectangle))
-            {
-                _coin.OnScreen = false;
-            }
-            #endregion
 
 
             if (_hero.IsMoving)
@@ -171,9 +208,6 @@ namespace Game1
             if (_hero.IsDead)
                 camPos.X = 0;
              
-            
-
-
             base.Update(gameTime);
         }
 
@@ -195,15 +229,27 @@ namespace Game1
             spriteBatch.Begin(transformMatrix:viewMatrix);
            // spriteBatch.Begin();
             _hero.Draw(spriteBatch);
-            _coin.Draw(spriteBatch);
-            if(_Enemy.isAlive)
-            _Enemy.Draw(spriteBatch);
+
+            foreach(coin coin in coins)
+            coin.Draw(spriteBatch);
+
+            foreach(Enemy enemy in _Enemys)
+            {
+                if (enemy.isAlive)
+                   enemy.Draw(spriteBatch);
+            }
+
 
             map.Draw(spriteBatch);
             MovingTile.Draw(spriteBatch);
+            
             spriteBatch.End();
 
-            
+            spriteBatch.Begin();
+            spriteBatch.DrawString(font, "Score: " + _hero.Score, new Vector2(0, 0), Color.Black);
+            spriteBatch.End();
+
+
 
             base.Draw(gameTime);
         }

@@ -30,12 +30,18 @@ namespace Game1
             _animation.AantalBewegingenPerSeconde = 12;
             
             Positie = new Vector2(PositieX, PositieY);
-            rectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 51, 46);
+            
         }
 
         public void Update(GameTime gametime)
         {
-            _animation.Update(gametime);
+            if (OnScreen)
+            {
+                _animation.Update(gametime);
+                rectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 51, 46);
+            }
+            else
+                rectangle = new Rectangle(0, 0, 0, 0);
         }
         public void Draw(SpriteBatch spriteBatch)
         {
