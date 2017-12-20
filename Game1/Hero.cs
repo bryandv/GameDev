@@ -31,6 +31,7 @@ namespace Game1
         public bool hasJumped;
         public bool IsMoving = false;
         public bool IsDead = false;
+        public bool direction = true;
         public int Score = 0;
 
     
@@ -171,6 +172,7 @@ namespace Game1
                 VelocityX.X = 4f;
                 IsMoving = true;
                 _texture = _textureR;
+                direction = true;
             }
             else if (_bediening.left)
             {
@@ -178,6 +180,7 @@ namespace Game1
                 VelocityX.X = -4f;
                 IsMoving = true;
                 _texture = _textureL;
+                direction = false;
             }
             else
                 VelocityX.X = 0f;

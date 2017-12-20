@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bulletSprite2.png" />
+    <Content Include="Content\bulletSprite2L.png" />
     <Content Include="Content\charx25.png" />
     <Content Include="Content\charx25L.png" />
     <Content Include="Content\charx25R.png" />

@@ -12,15 +12,18 @@ namespace Game1
         public bool left { get; set; }
         public bool right { get; set; }
         public bool shoot { get; set; }
+        
         public abstract void Update();
 
     }
 
     public class BedieningPijltjes : Bediening
     {
+       
         public override void Update()
         {
             KeyboardState stateKey = Keyboard.GetState();
+            
 
             if (stateKey.IsKeyDown(Keys.Left))
             {
@@ -39,16 +42,7 @@ namespace Game1
             {
                 right = false;
             }
-
-            if(stateKey.IsKeyDown(Keys.Space))
-            {
-                shoot = true;
-            }
-
-            if (stateKey.IsKeyUp(Keys.Space))
-            {
-                shoot = false;
-            }
+            
 
         }
     }
