@@ -168,14 +168,14 @@ namespace Game1
             if (_bediening.right)
             {
                 _animation.Update(gameTime);
-                VelocityX.X = 2f;
+                VelocityX.X = 4f;
                 IsMoving = true;
                 _texture = _textureR;
             }
             else if (_bediening.left)
             {
                 _animation.Update(gameTime);
-                VelocityX.X = -2f;
+                VelocityX.X = -4f;
                 IsMoving = true;
                 _texture = _textureL;
             }

@@ -45,6 +45,7 @@
     <Compile Include="AnimationFrame.cs" />
     <Compile Include="Bediening.cs" />
     <Compile Include="Blok.cs" />
+    <Compile Include="bullet.cs" />
     <Compile Include="Camera2D.cs" />
     <Compile Include="coin.cs" />
     <Compile Include="Enemy.cs" />
@@ -67,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bulletSprite2.png" />
     <Content Include="Content\charx25.png" />
     <Content Include="Content\charx25L.png" />
     <Content Include="Content\charx25R.png" />

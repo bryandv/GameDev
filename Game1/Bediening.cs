@@ -11,6 +11,7 @@ namespace Game1
     {
         public bool left { get; set; }
         public bool right { get; set; }
+        public bool shoot { get; set; }
         public abstract void Update();
 
     }
@@ -37,6 +38,16 @@ namespace Game1
             if (stateKey.IsKeyUp(Keys.Right))
             {
                 right = false;
+            }
+
+            if(stateKey.IsKeyDown(Keys.Space))
+            {
+                shoot = true;
+            }
+
+            if (stateKey.IsKeyUp(Keys.Space))
+            {
+                shoot = false;
             }
 
         }

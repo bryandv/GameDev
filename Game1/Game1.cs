@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 namespace Game1
@@ -20,6 +21,7 @@ namespace Game1
         Texture2D Enemy_afbeeldingL;
         Texture2D MovingTile_afbeelding;
         Texture2D coin_afbeelding;
+        Texture2D bullet_afbeelding;
         #endregion
 
         #region Wereld Variabele
@@ -31,8 +33,9 @@ namespace Game1
         Camera2D camera;
         List<coin> coins = new List<coin>();
         List<Enemy> _Enemys = new List<Enemy>();
+        List<bullet> bullets = new List<bullet>();
         private SpriteFont font;
-
+        
         #endregion
 
         //List<ICollide> collideObjecten;
@@ -95,6 +98,9 @@ namespace Game1
             coins.Add(new coin(coin_afbeelding, 1900, 220));
             font = Content.Load<SpriteFont>("Score");
 
+            bullet_afbeelding = Content.Load<Texture2D>("bulletSprite2");
+            
+
             Tiles.Content = Content;
 
             map.Generate(new int[,]{
@@ -139,7 +145,18 @@ namespace Game1
             // Collisions voor tiles, enemys en coins in de wereld
             #region Tiles
             foreach (CollisionTiles tile in map.CollisionTiles)
+            {
                 _hero.Collision(tile.Rectangle, map.Width, map.Height);
+                for (int i = 0; i < bullets.Count; i++)
+                {
+                    if (bullets[i].rectangle.TouchLeftOf(tile.Rectangle))
+                    {
+                        bullets.Remove(bullets[i]);
+                        
+                    }
+                }
+            }
+                
 
             _hero.CollisionMovingTiles(MovingTile.rectangle);
             #endregion
@@ -152,6 +169,7 @@ namespace Game1
                 if (_hero.rectangle.TouchTopOf(enemy.rectangle))
                 {
                     enemy.isAlive = false;
+                    _hero.Score += 10;
                     _hero.Positie.Y -= 5f;
                     _hero.VelocityX.Y = -12f;
                 }
@@ -182,6 +200,49 @@ namespace Game1
                 }
             }
             #endregion
+            /*
+            foreach (Enemy enemy in _Enemys)   
+            {
+                foreach (bullet Bullet in bullets)
+                {
+                    if(Bullet.rectangle.TouchLeftOf(enemy.rectangle))
+                    {
+                        bullets.Remove(Bullet);
+                    }
+                }
+            }*/
+            foreach (Enemy enemy in _Enemys)      
+            {
+                for (int i = 0; i < bullets.Count; i++)
+                {
+                        if (bullets[i].rectangle.TouchLeftOf(enemy.rectangle))
+                        {
+                            bullets.Remove(bullets[i]);
+                            enemy.isAlive = false;
+                           _hero.Score += 10;
+                    }
+                }
+
+            }
+            for (int i = 0; i < bullets.Count; i++)    
+            {
+                if (bullets[i].Positie.X > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width)
+                {
+                    bullets.RemoveAt(i);
+                }
+                    
+            }
+
+
+
+
+        }
+
+        public void shootbullet(int x, int y)
+        {
+            bullet b = new bullet(bullet_afbeelding, x+50, y+35);
+            bullets.Add(b);
+            
         }
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
@@ -198,7 +259,17 @@ namespace Game1
 
             foreach (coin coin in coins)
                 coin.Update(gameTime);
+           //_bullet.Update(gameTime);
 
+            if(_hero._bediening.shoot)
+            {
+                 shootbullet((int)_hero.Positie.X, (int)_hero.Positie.Y); 
+            }
+
+            foreach(bullet Bullet in bullets)
+            {
+                Bullet.Update(gameTime);
+            }
             Collisions();
            
 
@@ -239,7 +310,8 @@ namespace Game1
                    enemy.Draw(spriteBatch);
             }
 
-
+            foreach (bullet Bullet in bullets)
+                Bullet.Draw(spriteBatch);
             map.Draw(spriteBatch);
             MovingTile.Draw(spriteBatch);
             
