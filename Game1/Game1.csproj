@@ -77,6 +77,7 @@
     <Content Include="Content\coin2.png" />
     <Content Include="Content\Enemyx2L.png" />
     <Content Include="Content\Enemyx2R.png" />
+    <Content Include="Content\hillsbackground.png" />
     <Content Include="Content\Tile1.png" />
     <Content Include="Content\Tile2.png" />
     <Content Include="Content\Tile3.png" />

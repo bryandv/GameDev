@@ -23,12 +23,7 @@ namespace Game1
            Positie = new Vector2(posX,posY);
             
         }*/
-       /* public void Update(GameTime gametime,bool direction)
-        {
-
-                Positie.X += speed;
-                rectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 19, 12);
-        }*/
+ 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_texture, Positie, null, Color.White);

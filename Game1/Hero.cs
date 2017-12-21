@@ -44,7 +44,7 @@ namespace Game1
             m = new Matrix();
             rotationYMatrix = Matrix.CreateRotationX((float)Math.PI / 2);
 
-            Positie = new Vector2(100, 0);
+            Positie = new Vector2(600, 0);
             _animation = new Animation();
             _animation.AddFrame(new Rectangle(160, 0, 80, 80));
             _animation.AddFrame(new Rectangle(80, 0, 80, 80));
@@ -74,93 +74,10 @@ namespace Game1
                 VelocityX.Y += 0.4f;
             if(IsDead == true)
             {
-                Positie = new Vector2(100, 100);
+                Positie = new Vector2(600, 100);
                 IsDead = false;
             }
-
-
-
-            #region test
-            /*
-
-            if (_bediening.left)
-            {
-                _animation.Update(gameTime);
-                _texture = _textureL;
-                IsMoving = true;
-            }
-            else if (_bediening.right)
-            {
-                _animation.Update(gameTime);
-                _texture = _textureR;
-                IsMoving = true;
-            }
-            else
-                IsMoving = false;
-
-
-            if (_bediening.left)
-                VelocityX.X = -2f;
-            //Positie -= VelocityX;
-            else if (_bediening.right)
-                VelocityX.X = 2f;
-            //Positie += VelocityX;
-            else
-                VelocityX.X = 0f;
-           
-            
-
-            /*if (hasJumped)
-            {
-                Positie.Y += jumpspeed;
-                jumpspeed += 1;
-                if(Positie.Y >= startY)
-                {
-                    Positie.Y = startY;
-                    hasJumped = false;
-                }
-            }
-            else
-            {
-                if(stateKey.IsKeyDown(Keys.Up) && hasJumped == false)
-                {
-                    hasJumped = true;
-                    jumpspeed = -20;
-                    startY = Positie.Y;
-                }
-            }
-
-            if (Positie.Y + _texture.Height >= 450)
-                hasJumped = false;
-
-
-
-
-            if ((stateKey.IsKeyDown(Keys.Up)) && (hasJumped == false))
-            {
-                Positie.Y -= 10f;
-                VelocityX.Y = -5f;
-                hasJumped = true;
-            }
-
-            if(hasJumped == true)
-            {
-                float i = 1;
-                VelocityX.Y += 0.15f *i;
-            }
-            
-            if(Positie.Y + _texture.Height >= 400)
-            {
-                hasJumped = false;
-            }
-
-            if (hasJumped == false)
-            {
-                VelocityX.Y = 0f;
-            }
-            */
-
-            #endregion
+  
         }
 
         private void Input(GameTime gameTime)
@@ -263,6 +180,8 @@ namespace Game1
             if(rectangle.TouchTopOf(newRectangle))
             {
                 rectangle.Y = newRectangle.Y - rectangle.Height;
+                Positie.Y = newRectangle.Y - rectangle.Height;
+                
                 VelocityX.Y = 0f;
                 hasJumped = false;
             }

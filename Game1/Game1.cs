@@ -23,12 +23,14 @@ namespace Game1
         Texture2D coin_afbeelding;
         Texture2D bullet_afbeeldingRechts;
         Texture2D bullet_afbeeldingLinks;
+        Texture2D background;
         #endregion
 
         #region Wereld Variabele
         Hero _hero;
      
-        MovingTiles MovingTile;
+        MovingTilesLeftRight MovingTile;
+        MovingTilesUpDown moving;
         Map map;
         //Blok _blok;
         Camera2D camera;
@@ -36,8 +38,10 @@ namespace Game1
         List<Enemy> _Enemys = new List<Enemy>();
         List<BulletRight> bulletsright = new List<BulletRight>();
         List<BulletLeft> bulletsleft = new List<BulletLeft>();
+        List<MovingTiles> movingTiles = new List<MovingTiles>();
         KeyboardState pastkey;
         private SpriteFont font;
+        public Rectangle mainframe;
         
         #endregion
 
@@ -52,6 +56,9 @@ namespace Game1
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = 1500;
+            graphics.PreferredBackBufferHeight = 750;
+            graphics.ApplyChanges();
             Content.RootDirectory = "Content";
         }
 
@@ -88,10 +95,12 @@ namespace Game1
             Enemy_afbeeldingR = Content.Load<Texture2D>("Enemyx2R");
             
             _Enemys.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 801, 365, 800, 1050));
-            _Enemys.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 1621, 365, 1620, 2000));
+            _Enemys.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 1721, 365, 1720, 2150));
 
             MovingTile_afbeelding = Content.Load<Texture2D>("TileMove");
-            MovingTile = new MovingTiles(MovingTile_afbeelding,1051,200,1050,1500);
+            MovingTile = new MovingTilesLeftRight(MovingTile_afbeelding,1201,200,1200,1500);
+            moving = new MovingTilesUpDown(MovingTile_afbeelding, 675, 496, 497, 600);
+            movingTiles.Add(MovingTile);
 
             coin_afbeelding = Content.Load<Texture2D>("coin2");
             
@@ -99,12 +108,14 @@ namespace Game1
             coins.Add(new coin(coin_afbeelding, 690, 300));
             coins.Add(new coin(coin_afbeelding, 1500, 150));
             coins.Add(new coin(coin_afbeelding, 1900, 220));
+            coins.Add(new coin(coin_afbeelding, 50, 550));
             font = Content.Load<SpriteFont>("Score");
 
             bullet_afbeeldingRechts = Content.Load<Texture2D>("bulletSprite2");
             bullet_afbeeldingLinks = Content.Load<Texture2D>("bulletSprite2L");
-            
 
+            background = Content.Load<Texture2D>("hillsbackground");
+            mainframe = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             Tiles.Content = Content;
 
             map.Generate(new int[,]{
@@ -114,7 +125,11 @@ namespace Game1
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,3,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {5,3,3,2,2,2,3,3,4,0,0,5,3,3,3,3,3,3,4,0,0,0,0,5,3,3,3,3,3,3,4,0,0,0,0},
+            {5,3,3,2,2,2,3,3,4,0,0,5,3,3,3,3,3,3,4,0,0,0,0,0,5,3,3,3,3,3,4,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3},
             }, 71);
 
 
@@ -158,11 +173,25 @@ namespace Game1
                         bulletsright.Remove(bulletsright[i]);
                         
                     }
+
+                }
+                for (int i = 0; i < bulletsleft.Count; i++)
+                {
+ 
+                        if (bulletsleft[i].rectangle.TouchLeftOf(tile.Rectangle))
+                        {
+                            bulletsleft.Remove(bulletsleft[i]);
+
+                        }
+
+               
+
                 }
             }
                 
 
             _hero.CollisionMovingTiles(MovingTile.rectangle);
+            _hero.CollisionMovingTiles(moving.rectangle);
             #endregion
             #region enemys
             foreach (Enemy enemy in _Enemys)
@@ -170,6 +199,8 @@ namespace Game1
 
             foreach (Enemy enemy in _Enemys)
             {
+                
+
                 if (_hero.rectangle.TouchTopOf(enemy.rectangle))
                 {
                     enemy.isAlive = false;
@@ -177,6 +208,27 @@ namespace Game1
                     _hero.Positie.Y -= 5f;
                     _hero.VelocityX.Y = -12f;
                 }
+
+                for (int i = 0; i < bulletsright.Count; i++)
+                {
+                    if (bulletsright[i].rectangle.TouchLeftOf(enemy.rectangle))
+                    {
+                        bulletsright.Remove(bulletsright[i]);
+                        enemy.isAlive = false;
+                        _hero.Score += 10;
+                    }
+                }
+
+                for (int i = 0; i < bulletsleft.Count; i++)
+                {
+                    if (bulletsleft[i].rectangle.TouchLeftOf(enemy.rectangle))
+                    {
+                        bulletsleft.Remove(bulletsleft[i]);
+                        enemy.isAlive = false;
+                        _hero.Score += 10;
+                    }
+                }
+
             }
             #endregion 
             #region coins
@@ -204,35 +256,6 @@ namespace Game1
                 }
             }
             #endregion
-            /*
-            foreach (Enemy enemy in _Enemys)   
-            {
-                foreach (bullet Bullet in bullets)
-                {
-                    if(Bullet.rectangle.TouchLeftOf(enemy.rectangle))
-                    {
-                        bullets.Remove(Bullet);
-                    }
-                }
-            }*/
-            foreach (Enemy enemy in _Enemys)      
-            {
-                for (int i = 0; i < bulletsright.Count; i++)
-                {
-                        if (bulletsright[i].rectangle.TouchLeftOf(enemy.rectangle))
-                        {
-                            bulletsright.Remove(bulletsright[i]);
-                            enemy.isAlive = false;
-                           _hero.Score += 10;
-                    }
-                }
-
-            }
-
-
-
-
-
 
         }
 
@@ -242,7 +265,6 @@ namespace Game1
             bulletsright.Add(b);
             
         }
-
         public void shootbulletLeft(int x, int y)
         {
             BulletLeft b = new BulletLeft(bullet_afbeeldingLinks, x - 50, y+35);
@@ -257,21 +279,13 @@ namespace Game1
 
             _hero.Update(gameTime);
             MovingTile.Update(gameTime);
+            moving.Update(gameTime);
 
             foreach(Enemy enemy in _Enemys)
               enemy.Update(gameTime);
 
             foreach (coin coin in coins)
                 coin.Update(gameTime);
-            //_bullet.Update(gameTime);
-
-            /* if(_hero._bediening.shoot)
-             {
-                 if (_hero.direction)
-                     shootbulletRight((int)_hero.Positie.X, (int)_hero.Positie.Y);
-                 else
-                     shootbulletLeft((int)_hero.Positie.X, (int)_hero.Positie.Y);
-             }*/
 
             if (Keyboard.GetState().IsKeyDown(Keys.Space) && pastkey.IsKeyUp(Keys.Space))
             {
@@ -300,6 +314,15 @@ namespace Game1
                 }
 
             }
+            for (int i = 0; i < bulletsleft.Count; i++)
+            {
+                //float oldstate = bulletsright[i].Positie.X;
+                if (bulletsleft[i].Positie.X < (_hero.Positie.X - 400))
+                {
+                    bulletsleft.Remove(bulletsleft[i]);
+                }
+
+            }
 
             if (_hero.IsMoving)
                 camPos.X += _hero.VelocityX.X;
@@ -323,6 +346,15 @@ namespace Game1
              camera.Rotation = rotation;
               camera.Zoom = zoom;
 
+            spriteBatch.Begin();
+            spriteBatch.Draw(background, mainframe, Color.White);
+            spriteBatch.DrawString(font, "Score: " + _hero.Score, new Vector2((GraphicsDevice.Viewport.Width / 2) - 150, 0), Color.Black);
+
+            spriteBatch.End();
+
+
+
+
             // TODO: Add your drawing code here
             spriteBatch.Begin(transformMatrix:viewMatrix);
            // spriteBatch.Begin();
@@ -343,12 +375,11 @@ namespace Game1
                 Bullet.Draw(spriteBatch);
             map.Draw(spriteBatch);
             MovingTile.Draw(spriteBatch);
+            moving.Draw(spriteBatch);
             
             spriteBatch.End();
 
-            spriteBatch.Begin();
-            spriteBatch.DrawString(font, "Score: " + _hero.Score, new Vector2((GraphicsDevice.Viewport.Width / 2) - 150, 0) , Color.Black);
-            spriteBatch.End();
+
 
            
 
