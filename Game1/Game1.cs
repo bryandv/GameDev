@@ -24,6 +24,7 @@ namespace Game1
         Texture2D bullet_afbeeldingRechts;
         Texture2D bullet_afbeeldingLinks;
         Texture2D background;
+        Texture2D exitTile;
         #endregion
 
         #region Wereld Variabele
@@ -52,6 +53,16 @@ namespace Game1
         Vector2 camPos = new Vector2();
         float rotation = 0;
         float zoom = 1;
+
+        enum GameState
+        {
+            MainMenu,
+            playing,
+            Dead,
+        }
+
+        GameState CurrentGameState = GameState.MainMenu;
+
 
         public Game1()
         {
@@ -101,6 +112,8 @@ namespace Game1
             MovingTile = new MovingTilesLeftRight(MovingTile_afbeelding,1201,200,1200,1500);
             moving = new MovingTilesUpDown(MovingTile_afbeelding, 675, 496, 497, 600);
             movingTiles.Add(MovingTile);
+            movingTiles.Add(moving);
+            movingTiles.Add(new MovingTilesLeftRight(MovingTile_afbeelding, 3409, 300, 3408, 3800));
 
             coin_afbeelding = Content.Load<Texture2D>("coin2");
             
@@ -116,20 +129,22 @@ namespace Game1
 
             background = Content.Load<Texture2D>("hillsbackground");
             mainframe = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            //TODO exit tile op scherm laten zien
+            exitTile = Content.Load<Texture2D>("exitTile");
             Tiles.Content = Content;
 
             map.Generate(new int[,]{
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,3,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {5,3,3,2,2,2,3,3,4,0,0,5,3,3,3,3,3,3,4,0,0,0,0,0,5,3,3,3,3,3,4,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,3,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {5,3,3,2,2,2,3,3,4,0,0,5,3,3,3,3,3,3,4,0,0,0,0,0,5,3,3,3,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,0,0,0,0,0,0,0,3,3,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,0,0,2,2,0,0,0,0,0,0,0,2,2,0,0,3,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,2,2,0,0,2,2,0,0,0,0,0,0,0,2,2,0,0,2,3,0,0,0,0,0,0,0},
+            {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,0,0,0,2,0,0,2,2,0,0,2,2,0,0,0,0,0,0,0,2,2,0,0,2,2,3,3,3,3,3,3,3},
             }, 71);
 
 
@@ -188,10 +203,14 @@ namespace Game1
 
                 }
             }
-                
 
-            _hero.CollisionMovingTiles(MovingTile.rectangle);
-            _hero.CollisionMovingTiles(moving.rectangle);
+            foreach (MovingTiles tile in movingTiles)
+                _hero.CollisionMovingTiles(tile.rectangle);
+
+            foreach (MovingTiles tile in movingTiles)
+                _hero.CollisionMovingTiles(tile.rectangle);
+
+
             #endregion
             #region enemys
             foreach (Enemy enemy in _Enemys)
@@ -277,58 +296,73 @@ namespace Game1
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            _hero.Update(gameTime);
-            MovingTile.Update(gameTime);
-            moving.Update(gameTime);
-
-            foreach(Enemy enemy in _Enemys)
-              enemy.Update(gameTime);
-
-            foreach (coin coin in coins)
-                coin.Update(gameTime);
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Space) && pastkey.IsKeyUp(Keys.Space))
+            if(CurrentGameState == GameState.MainMenu)
             {
-                if (_hero.direction)
-                    shootbulletRight((int)_hero.Positie.X, (int)_hero.Positie.Y);
-                else
-                    shootbulletLeft((int)_hero.Positie.X, (int)_hero.Positie.Y);
-            }
-            pastkey = Keyboard.GetState();
-
-
-            foreach (BulletRight Bullet in bulletsright)
-                Bullet.Update(gameTime);
-          
-            foreach (BulletLeft Bullet in bulletsleft)
-                Bullet.Update(gameTime);
-           
-            Collisions();
-
-            for (int i = 0; i < bulletsright.Count; i++)
-            {
-                //float oldstate = bulletsright[i].Positie.X;
-                if (bulletsright[i].Positie.X > (_hero.Positie.X + 400))
+                if(Keyboard.GetState().IsKeyDown(Keys.Enter))
                 {
-                    bulletsright.Remove(bulletsright[i]);
+                    CurrentGameState = GameState.playing;
+                }
+            }
+
+            else if(CurrentGameState == GameState.playing)
+            {
+                #region update_lvl1
+                _hero.Update(gameTime);
+
+                foreach (MovingTiles tile in movingTiles)
+                    tile.Update(gameTime);
+
+                foreach (Enemy enemy in _Enemys)
+                    enemy.Update(gameTime);
+
+                foreach (coin coin in coins)
+                    coin.Update(gameTime);
+
+                if (Keyboard.GetState().IsKeyDown(Keys.Space) && pastkey.IsKeyUp(Keys.Space))
+                {
+                    if (_hero.direction)
+                        shootbulletRight((int)_hero.Positie.X, (int)_hero.Positie.Y);
+                    else
+                        shootbulletLeft((int)_hero.Positie.X, (int)_hero.Positie.Y);
+                }
+                pastkey = Keyboard.GetState();
+
+
+                foreach (BulletRight Bullet in bulletsright)
+                    Bullet.Update(gameTime);
+
+                foreach (BulletLeft Bullet in bulletsleft)
+                    Bullet.Update(gameTime);
+
+                Collisions();
+
+                for (int i = 0; i < bulletsright.Count; i++)
+                {
+                    //float oldstate = bulletsright[i].Positie.X;
+                    if (bulletsright[i].Positie.X > (_hero.Positie.X + 400))
+                    {
+                        bulletsright.Remove(bulletsright[i]);
+                    }
+
+                }
+                for (int i = 0; i < bulletsleft.Count; i++)
+                {
+                    //float oldstate = bulletsright[i].Positie.X;
+                    if (bulletsleft[i].Positie.X < (_hero.Positie.X - 400))
+                    {
+                        bulletsleft.Remove(bulletsleft[i]);
+                    }
+
                 }
 
-            }
-            for (int i = 0; i < bulletsleft.Count; i++)
-            {
-                //float oldstate = bulletsright[i].Positie.X;
-                if (bulletsleft[i].Positie.X < (_hero.Positie.X - 400))
-                {
-                    bulletsleft.Remove(bulletsleft[i]);
-                }
-
+                if (_hero.IsMoving)
+                    camPos.X += _hero.VelocityX.X;
+                if (_hero.IsDead)
+                    camPos.X = 0;
+                #endregion
             }
 
-            if (_hero.IsMoving)
-                camPos.X += _hero.VelocityX.X;
-            if (_hero.IsDead)
-                camPos.X = 0;
-             
+
             base.Update(gameTime);
         }
 
@@ -346,42 +380,52 @@ namespace Game1
              camera.Rotation = rotation;
               camera.Zoom = zoom;
 
-            spriteBatch.Begin();
-            spriteBatch.Draw(background, mainframe, Color.White);
-            spriteBatch.DrawString(font, "Score: " + _hero.Score, new Vector2((GraphicsDevice.Viewport.Width / 2) - 150, 0), Color.Black);
-
-            spriteBatch.End();
-
-
-
-
-            // TODO: Add your drawing code here
-            spriteBatch.Begin(transformMatrix:viewMatrix);
-           // spriteBatch.Begin();
-            _hero.Draw(spriteBatch);
-
-            foreach(coin coin in coins)
-            coin.Draw(spriteBatch);
-
-            foreach(Enemy enemy in _Enemys)
+            if (CurrentGameState == GameState.MainMenu)
             {
-                if (enemy.isAlive)
-                   enemy.Draw(spriteBatch);
+                spriteBatch.Begin();
+                spriteBatch.DrawString(font, "press enter to start", new Vector2((GraphicsDevice.Viewport.Width / 2) - 150, 375), Color.Black);
+                
+                spriteBatch.End();
             }
 
-            foreach (BulletRight Bullet in bulletsright)
-                Bullet.Draw(spriteBatch);
-            foreach (BulletLeft Bullet in bulletsleft)
-                Bullet.Draw(spriteBatch);
-            map.Draw(spriteBatch);
-            MovingTile.Draw(spriteBatch);
-            moving.Draw(spriteBatch);
-            
-            spriteBatch.End();
+            else if (CurrentGameState == GameState.playing)
+            {
+                #region GameLvl1;
+                spriteBatch.Begin();
+                spriteBatch.Draw(background, mainframe, Color.White);
+                spriteBatch.DrawString(font, "Score: " + _hero.Score, new Vector2(750, 0), Color.Black);
+                spriteBatch.DrawString(font, "Hero Life: x" + _hero.HeroLife, new Vector2(0, 0), Color.Black);
+
+                spriteBatch.End();
+
+                // TODO: Add your drawing code here
+                spriteBatch.Begin(transformMatrix: viewMatrix);
+                // spriteBatch.Begin();
+                spriteBatch.Draw(exitTile, new Vector2(4680, 640), Color.White);
+                _hero.Draw(spriteBatch);
+
+                foreach (coin coin in coins)
+                    coin.Draw(spriteBatch);
+
+                foreach (Enemy enemy in _Enemys)
+                {
+                    if (enemy.isAlive)
+                        enemy.Draw(spriteBatch);
+                }
+
+                foreach (BulletRight Bullet in bulletsright)
+                    Bullet.Draw(spriteBatch);
+                foreach (BulletLeft Bullet in bulletsleft)
+                    Bullet.Draw(spriteBatch);
+                map.Draw(spriteBatch);
+                foreach (MovingTiles tile in movingTiles)
+                    tile.Draw(spriteBatch);
+
+                spriteBatch.End();
+                #endregion
+            }
 
 
-
-           
 
 
             base.Draw(gameTime);

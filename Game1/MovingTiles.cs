@@ -20,6 +20,11 @@ namespace Game1
         {
         }
 
+        public virtual void Update(GameTime gameTime)
+        {
+
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_texture, Positie, null, Color.White);
@@ -40,7 +45,7 @@ namespace Game1
         }
 
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             if (border)
                 Positie.X += speed;
@@ -65,7 +70,7 @@ namespace Game1
             Positie = new Vector2(PositieX, PositieY);
         }
 
-        public void Update(GameTime gametime)
+        public override void Update(GameTime gametime)
         {
             if (border)
                 Positie.Y += speed;

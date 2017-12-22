@@ -33,7 +33,7 @@ namespace Game1
         public bool IsDead = false;
         public bool direction = true;
         public int Score = 0;
-
+        public int HeroLife = 3;
     
         public Hero(Texture2D textureR,Texture2D textureL)
         {
@@ -75,6 +75,12 @@ namespace Game1
             if(IsDead == true)
             {
                 Positie = new Vector2(600, 100);
+                HeroLife--;
+               
+                if (HeroLife == 0)
+                {
+                    HeroLife = 3;
+                }
                 IsDead = false;
             }
   
@@ -181,9 +187,9 @@ namespace Game1
             {
                 rectangle.Y = newRectangle.Y - rectangle.Height;
                 Positie.Y = newRectangle.Y - rectangle.Height;
-                
-                VelocityX.Y = 0f;
                 hasJumped = false;
+                VelocityX.Y = 0f;
+              
             }
         }
 
