@@ -49,6 +49,7 @@
     <Compile Include="Camera2D.cs" />
     <Compile Include="coin.cs" />
     <Compile Include="Enemy.cs" />
+    <Compile Include="ExitTile.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Hero.cs" />
     <Compile Include="ICollide.cs" />

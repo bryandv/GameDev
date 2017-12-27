@@ -36,6 +36,7 @@ namespace Game1
         Map map;
         Map SecretLvl;
         SpecialTile fire;
+        ExitTile exit_SecretLvl;
         Camera2D camera;
         List<coin> coins = new List<coin>();
         List<coin> coins_SecretLvl = new List<coin>();
@@ -183,6 +184,9 @@ namespace Game1
             coins_SecretLvl.Add(new coin(coin_afbeelding, 1310, 495));
             #endregion
 
+            exitTile = Content.Load<Texture2D>("exitTile");
+            exit_SecretLvl = new ExitTile(exitTile, new Vector2(1310, 650));
+
             font = Content.Load<SpriteFont>("Score");
             fireTile = Content.Load<Texture2D>("SpecialTile");
             fire = new SpecialTile(fireTile, new Vector2(3110, 650));
@@ -193,7 +197,7 @@ namespace Game1
             background = Content.Load<Texture2D>("hillsbackground");
             mainframe = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             //TODO exit tile op scherm laten zien
-            exitTile = Content.Load<Texture2D>("exitTile");
+            
             Tiles.Content = Content;
 
             map.Generate(new int[,]{
@@ -386,25 +390,51 @@ namespace Game1
             }
 
 
-            for (int i = 18; i < coins_SecretLvl.Count; i++)
+            for (int i = 0; i < coins_SecretLvl.Count; i++)
             {
-                if(_hero.rectangle.TouchBottomOf(coins_SecretLvl[i].rectangle))
+                if (coins_SecretLvl.Count > 1)
                 {
-                    coins_SecretLvl.Remove(coins_SecretLvl[i]);
+                    System.Console.WriteLine(i);
+                    if (_hero.rectangle.TouchBottomOf(coins_SecretLvl[i].rectangle))
+                    {
+                        coins_SecretLvl.Remove(coins_SecretLvl[i]);
+                        _hero.Score++;
+                    }
+                    if (_hero.rectangle.TouchLeftOf(coins_SecretLvl[i].rectangle))
+                    {
+                        coins_SecretLvl.Remove(coins_SecretLvl[i]); _hero.Score++;
+                    }
+                    if (_hero.rectangle.TouchRightOf(coins_SecretLvl[i].rectangle))
+                    {
+                        coins_SecretLvl.Remove(coins_SecretLvl[i]); _hero.Score++;
+                    }
+                    if (_hero.rectangle.TouchTopOf(coins_SecretLvl[i].rectangle))
+                    {
+                        coins_SecretLvl.Remove(coins_SecretLvl[i]); _hero.Score++;
+                    }
                 }
-                if (_hero.rectangle.TouchLeftOf(coins_SecretLvl[i].rectangle))
+                else
                 {
-                    coins_SecretLvl.Remove(coins_SecretLvl[i]);
+
+                    if (_hero.rectangle.TouchLeftOf(coins_SecretLvl[0].rectangle))
+                    { coins_SecretLvl.Remove(coins_SecretLvl[0]); _hero.Score++; }
+                        
+
                 }
-                if (_hero.rectangle.TouchRightOf(coins_SecretLvl[i].rectangle))
-                {
-                    coins_SecretLvl.Remove(coins_SecretLvl[i]);
-                }
-                if (_hero.rectangle.TouchTopOf(coins_SecretLvl[i].rectangle))
-                {
-                    coins_SecretLvl.Remove(coins_SecretLvl[i]);
-                }
+                   
+                     
             }
+
+            if (_hero.rectangle.TouchTopOf(exit_SecretLvl.rectangle))
+            {
+                _hero.IsDead = true;
+                _hero.RespawnPositie = new Vector2(2950, 100);
+                camPos = new Vector2(2350, 0);
+                CurrentGameState = GameState.PlayingLvl1;
+               
+            }
+                
+
         }
 
         public void shootbulletRight(int x, int y)
@@ -567,10 +597,19 @@ namespace Game1
             else if (CurrentGameState == GameState.PlayingSecretLvl)
             {
                 spriteBatch.Begin();
+                spriteBatch.Draw(background, mainframe, Color.White);
+                spriteBatch.DrawString(font, "Score: " + _hero.Score, new Vector2(750, 0), Color.Black);
+                spriteBatch.DrawString(font, "Hero Life: x" + _hero.HeroLife, new Vector2(0, 0), Color.Black);
+
+                spriteBatch.End();
+
+                spriteBatch.Begin();
+                exit_SecretLvl.Draw(spriteBatch);
                 _hero.Draw(spriteBatch);
                 SecretLvl.Draw(spriteBatch);
                 foreach (coin coin in coins_SecretLvl)
                     coin.Draw(spriteBatch);
+               
                 spriteBatch.End();
             }
 
