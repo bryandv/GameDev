@@ -25,6 +25,7 @@ namespace Game1
         Texture2D bullet_afbeeldingLinks;
         Texture2D background;
         Texture2D exitTile;
+        Texture2D fireTile;
         #endregion
 
         #region Wereld Variabele
@@ -33,9 +34,11 @@ namespace Game1
         MovingTilesLeftRight MovingTile;
         MovingTilesUpDown moving;
         Map map;
-        //Blok _blok;
+        Map SecretLvl;
+        SpecialTile fire;
         Camera2D camera;
         List<coin> coins = new List<coin>();
+        List<coin> coins_SecretLvl = new List<coin>();
         List<Enemy> _Enemys = new List<Enemy>();
         List<BulletRight> bulletsright = new List<BulletRight>();
         List<BulletLeft> bulletsleft = new List<BulletLeft>();
@@ -46,18 +49,19 @@ namespace Game1
         
         #endregion
 
-        //List<ICollide> collideObjecten;
-        Level level;
+        
+       // Level level;
 
         int afstand = 55;
-        Vector2 camPos = new Vector2();
+        Vector2 camPos = new Vector2();                         
         float rotation = 0;
         float zoom = 1;
 
         enum GameState
         {
             MainMenu,
-            playing,
+            PlayingLvl1,
+            PlayingSecretLvl,
             Dead,
         }
 
@@ -84,6 +88,7 @@ namespace Game1
             // TODO: Add your initialization logic here
             camera = new Camera2D(GraphicsDevice.Viewport);
             map = new Map();
+            SecretLvl = new Map();
          
             base.Initialize();
         }
@@ -107,6 +112,8 @@ namespace Game1
             
             _Enemys.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 801, 365, 800, 1050));
             _Enemys.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 1721, 365, 1720, 2150));
+            _Enemys.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 2149, 650, 1900, 2350));
+            _Enemys.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 3191, 365, 3190, 3290));
 
             MovingTile_afbeelding = Content.Load<Texture2D>("TileMove");
             MovingTile = new MovingTilesLeftRight(MovingTile_afbeelding,1201,200,1200,1500);
@@ -122,7 +129,63 @@ namespace Game1
             coins.Add(new coin(coin_afbeelding, 1500, 150));
             coins.Add(new coin(coin_afbeelding, 1900, 220));
             coins.Add(new coin(coin_afbeelding, 50, 550));
+
+            #region coins secret
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 110, 75));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 190, 75));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 270, 75));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 350, 75));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 430, 75));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 510, 75));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 590, 75));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 670, 75));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 750, 75));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 830, 75));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 910, 75));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 990, 75));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 1070, 75));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 1150, 75));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 1230, 75));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 1310, 75));
+
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 110, 285));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 190, 285));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 270, 285));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 350, 285));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 430, 285));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 510, 285));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 590, 285));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 670, 285));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 750, 285));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 830, 285));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 910, 285));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 990, 285));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 1070, 285));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 1150, 285));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 1230, 285));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 1310, 285));
+
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 110, 495));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 190, 495));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 270, 495));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 350, 495));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 430, 495));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 510, 495));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 590, 495));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 670, 495));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 750, 495));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 830, 495));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 910, 495));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 990, 495));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 1070, 495));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 1150, 495));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 1230, 495));
+            coins_SecretLvl.Add(new coin(coin_afbeelding, 1310, 495));
+            #endregion
+
             font = Content.Load<SpriteFont>("Score");
+            fireTile = Content.Load<Texture2D>("SpecialTile");
+            fire = new SpecialTile(fireTile, new Vector2(3110, 650));
 
             bullet_afbeeldingRechts = Content.Load<Texture2D>("bulletSprite2");
             bullet_afbeeldingLinks = Content.Load<Texture2D>("bulletSprite2L");
@@ -145,6 +208,20 @@ namespace Game1
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,0,0,2,2,0,0,0,0,0,0,0,2,2,0,0,3,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,2,2,0,0,2,2,0,0,0,0,0,0,0,2,2,0,0,2,3,0,0,0,0,0,0,0},
             {3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,0,0,0,2,0,0,2,2,0,0,2,2,0,0,0,0,0,0,0,2,2,0,0,2,2,3,3,3,3,3,3,3},
+            }, 71);
+
+            SecretLvl.Generate(new int[,] {
+            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+            {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,2},
+            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+            {2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
+            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+            {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,2},
+            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
+            {2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2},
             }, 71);
 
 
@@ -174,7 +251,7 @@ namespace Game1
         }
 
         /// <summary>
-        public void Collisions()
+        public void CollisionsLvl1()
         {
             // Collisions voor tiles, enemys en coins in de wereld
             #region Tiles
@@ -212,6 +289,7 @@ namespace Game1
 
 
             #endregion
+
             #region enemys
             foreach (Enemy enemy in _Enemys)
                 _hero.CollisionEnemy(enemy.rectangle);
@@ -250,6 +328,7 @@ namespace Game1
 
             }
             #endregion 
+
             #region coins
             foreach (coin coin in coins)
             {
@@ -276,6 +355,56 @@ namespace Game1
             }
             #endregion
 
+            #region SecretLvl
+            if(_hero.rectangle.TouchTopOf(fire.rectangle))
+            {
+                CurrentGameState = GameState.PlayingSecretLvl;
+                _hero.IsDead = true;
+                _hero.RespawnPositie = new Vector2(200,0);
+            }
+            if (_hero.rectangle.TouchRightOf(fire.rectangle))
+            {
+                CurrentGameState = GameState.PlayingSecretLvl;
+            }
+            if (_hero.rectangle.TouchBottomOf(fire.rectangle))
+            {
+                CurrentGameState = GameState.PlayingSecretLvl;
+            }
+            if (_hero.rectangle.TouchLeftOf(fire.rectangle))
+            {
+                CurrentGameState = GameState.PlayingSecretLvl;
+            }
+            #endregion  
+
+        }
+
+        public void CollisionsSecret()
+        {
+            foreach (CollisionTiles tile in SecretLvl.CollisionTiles)
+            {
+                _hero.Collision(tile.Rectangle, map.Width, map.Height);
+            }
+
+
+            for (int i = 18; i < coins_SecretLvl.Count; i++)
+            {
+                if(_hero.rectangle.TouchBottomOf(coins_SecretLvl[i].rectangle))
+                {
+                    coins_SecretLvl.Remove(coins_SecretLvl[i]);
+                }
+                if (_hero.rectangle.TouchLeftOf(coins_SecretLvl[i].rectangle))
+                {
+                    coins_SecretLvl.Remove(coins_SecretLvl[i]);
+                }
+                if (_hero.rectangle.TouchRightOf(coins_SecretLvl[i].rectangle))
+                {
+                    coins_SecretLvl.Remove(coins_SecretLvl[i]);
+                }
+                if (_hero.rectangle.TouchTopOf(coins_SecretLvl[i].rectangle))
+                {
+                    coins_SecretLvl.Remove(coins_SecretLvl[i]);
+                }
+            }
         }
 
         public void shootbulletRight(int x, int y)
@@ -300,15 +429,15 @@ namespace Game1
             {
                 if(Keyboard.GetState().IsKeyDown(Keys.Enter))
                 {
-                    CurrentGameState = GameState.playing;
+                    CurrentGameState = GameState.PlayingLvl1;
                 }
             }
 
-            else if(CurrentGameState == GameState.playing)
+            else if(CurrentGameState == GameState.PlayingLvl1)
             {
                 #region update_lvl1
                 _hero.Update(gameTime);
-
+                fire.Update(gameTime);
                 foreach (MovingTiles tile in movingTiles)
                     tile.Update(gameTime);
 
@@ -334,7 +463,7 @@ namespace Game1
                 foreach (BulletLeft Bullet in bulletsleft)
                     Bullet.Update(gameTime);
 
-                Collisions();
+                CollisionsLvl1();
 
                 for (int i = 0; i < bulletsright.Count; i++)
                 {
@@ -354,12 +483,23 @@ namespace Game1
                     }
 
                 }
+                
 
                 if (_hero.IsMoving)
                     camPos.X += _hero.VelocityX.X;
                 if (_hero.IsDead)
                     camPos.X = 0;
                 #endregion
+            }
+
+            else if(CurrentGameState == GameState.PlayingSecretLvl)
+            {
+                _hero.Update(gameTime);
+                
+                CollisionsSecret();
+
+                foreach (coin coin in coins_SecretLvl)
+                    coin.Update(gameTime);
             }
 
 
@@ -384,18 +524,17 @@ namespace Game1
             {
                 spriteBatch.Begin();
                 spriteBatch.DrawString(font, "press enter to start", new Vector2((GraphicsDevice.Viewport.Width / 2) - 150, 375), Color.Black);
-                
                 spriteBatch.End();
             }
 
-            else if (CurrentGameState == GameState.playing)
+            else if (CurrentGameState == GameState.PlayingLvl1)
             {
                 #region GameLvl1;
                 spriteBatch.Begin();
                 spriteBatch.Draw(background, mainframe, Color.White);
                 spriteBatch.DrawString(font, "Score: " + _hero.Score, new Vector2(750, 0), Color.Black);
                 spriteBatch.DrawString(font, "Hero Life: x" + _hero.HeroLife, new Vector2(0, 0), Color.Black);
-
+                
                 spriteBatch.End();
 
                 // TODO: Add your drawing code here
@@ -403,7 +542,7 @@ namespace Game1
                 // spriteBatch.Begin();
                 spriteBatch.Draw(exitTile, new Vector2(4680, 640), Color.White);
                 _hero.Draw(spriteBatch);
-
+                fire.Draw(spriteBatch);
                 foreach (coin coin in coins)
                     coin.Draw(spriteBatch);
 
@@ -425,10 +564,20 @@ namespace Game1
                 #endregion
             }
 
+            else if (CurrentGameState == GameState.PlayingSecretLvl)
+            {
+                spriteBatch.Begin();
+                _hero.Draw(spriteBatch);
+                SecretLvl.Draw(spriteBatch);
+                foreach (coin coin in coins_SecretLvl)
+                    coin.Draw(spriteBatch);
+                spriteBatch.End();
+            }
 
 
 
-            base.Draw(gameTime);
+
+                base.Draw(gameTime);
         }
     }
 }

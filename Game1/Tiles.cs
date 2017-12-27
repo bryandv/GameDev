@@ -41,4 +41,5 @@ namespace Game1
             this.Rectangle = newRectangle;
         }
     }
+
 }

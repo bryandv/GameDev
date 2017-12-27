@@ -22,6 +22,7 @@ namespace Game1
         private Rectangle _viewRectangle;
         public Rectangle rectangle;
         public Vector2 Positie;
+        public Vector2 RespawnPositie;
         public Bediening _bediening { get; set; }
         public Rectangle CollisionRectangle;
 
@@ -74,7 +75,7 @@ namespace Game1
                 VelocityX.Y += 0.4f;
             if(IsDead == true)
             {
-                Positie = new Vector2(600, 100);
+                Positie = RespawnPositie;
                 HeroLife--;
                
                 if (HeroLife == 0)
@@ -161,6 +162,7 @@ namespace Game1
                 //Positie.Y = yoffset - rectangle.Height;
                 // IsMoving = false;
                 IsDead = true;
+                RespawnPositie = new Vector2(600, 100);
                 //Positie = new Vector2(100, 100);
                 
             } 
@@ -174,10 +176,12 @@ namespace Game1
             if(rectangle.TouchLeftOf(newRectangle))
             {
                 IsDead = true;
+                RespawnPositie = new Vector2(600, 100);
             }
             if (rectangle.TouchRightOf(newRectangle))
             {
                 IsDead = true;
+                RespawnPositie = new Vector2(600, 100);
             }
         }
 

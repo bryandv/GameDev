@@ -41,3 +41,4 @@ D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\
 D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\bulletSprite2L.xnb
 D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\hillsbackground.xnb
 D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\exitTile.xnb
+D:\school\ap\2017-2018\Game_Devolopment\1game\Game1\Game1\bin\Windows\x86\Debug\Content\SpecialTile.xnb
