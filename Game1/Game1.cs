@@ -30,12 +30,11 @@ namespace Game1
 
         #region Wereld Variabele
         Hero _hero;
-     
-        MovingTilesLeftRight MovingTile;
-        MovingTilesUpDown moving;
         Map map;
         Map SecretLvl;
+        Map map_Lvl2;
         SpecialTile fire;
+        ExitTile exit_Lvl1;
         ExitTile exit_SecretLvl;
         Camera2D camera;
         List<coin> coins = new List<coin>();
@@ -44,6 +43,7 @@ namespace Game1
         List<BulletRight> bulletsright = new List<BulletRight>();
         List<BulletLeft> bulletsleft = new List<BulletLeft>();
         List<MovingTiles> movingTiles = new List<MovingTiles>();
+        List<MovingTiles> movingTiles_Lvl2 = new List<MovingTiles>();
         KeyboardState pastkey;
         private SpriteFont font;
         public Rectangle mainframe;
@@ -63,6 +63,8 @@ namespace Game1
             MainMenu,
             PlayingLvl1,
             PlayingSecretLvl,
+            PlayingLvl2,
+            End,
             Dead,
         }
 
@@ -90,6 +92,7 @@ namespace Game1
             camera = new Camera2D(GraphicsDevice.Viewport);
             map = new Map();
             SecretLvl = new Map();
+            map_Lvl2 = new Map();
          
             base.Initialize();
         }
@@ -117,11 +120,12 @@ namespace Game1
             _Enemys.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 3191, 365, 3190, 3290));
 
             MovingTile_afbeelding = Content.Load<Texture2D>("TileMove");
-            MovingTile = new MovingTilesLeftRight(MovingTile_afbeelding,1201,200,1200,1500);
-            moving = new MovingTilesUpDown(MovingTile_afbeelding, 675, 496, 497, 600);
-            movingTiles.Add(MovingTile);
-            movingTiles.Add(moving);
+
+            movingTiles.Add(new MovingTilesLeftRight(MovingTile_afbeelding, 1201, 200, 1200, 1500));
+            movingTiles.Add(new MovingTilesUpDown(MovingTile_afbeelding, 675, 496, 497, 600));
             movingTiles.Add(new MovingTilesLeftRight(MovingTile_afbeelding, 3409, 300, 3408, 3800));
+
+            movingTiles_Lvl2.Add(new MovingTilesUpDown(MovingTile_afbeelding, 1200, 200, 199, 700));
 
             coin_afbeelding = Content.Load<Texture2D>("coin2");
             
@@ -186,6 +190,7 @@ namespace Game1
 
             exitTile = Content.Load<Texture2D>("exitTile");
             exit_SecretLvl = new ExitTile(exitTile, new Vector2(1310, 650));
+            exit_Lvl1 = new ExitTile(exitTile, new Vector2(4680, 640));
 
             font = Content.Load<SpriteFont>("Score");
             fireTile = Content.Load<Texture2D>("SpecialTile");
@@ -215,17 +220,31 @@ namespace Game1
             }, 71);
 
             SecretLvl.Generate(new int[,] {
-            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
-            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
-            {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,2},
-            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
-            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
-            {2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
-            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
-            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
-            {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,2},
-            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2},
-            {2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2},
+            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2},
+            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2},
+            {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,2,2},
+            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2},
+            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2},
+            {2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
+            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2},
+            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2},
+            {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,2,2},
+            {2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2},
+            {2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,2},
+            }, 71);
+
+            map_Lvl2.Generate(new int[,] {
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,3,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {5,3,3,4,0,0,0,0,0,0,0,0,5,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,5,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             }, 71);
 
 
@@ -287,10 +306,6 @@ namespace Game1
 
             foreach (MovingTiles tile in movingTiles)
                 _hero.CollisionMovingTiles(tile.rectangle);
-
-            foreach (MovingTiles tile in movingTiles)
-                _hero.CollisionMovingTiles(tile.rectangle);
-
 
             #endregion
 
@@ -380,6 +395,15 @@ namespace Game1
             }
             #endregion  
 
+            if (_hero.rectangle.TouchLeftOf(exit_Lvl1.rectangle))
+            {
+                CurrentGameState = GameState.PlayingLvl2;
+                _hero.IsDead = true;
+                _hero.RespawnPositie = new Vector2(600, 0);
+                
+            }
+                
+
         }
 
         public void CollisionsSecret()
@@ -435,6 +459,17 @@ namespace Game1
             }
                 
 
+        }
+
+        public void CollisionLvl2()
+        {
+            foreach(Tiles tile in map_Lvl2.CollisionTiles)
+            {
+                _hero.Collision(tile.Rectangle, map.Width, map.Height);
+            }
+
+            foreach (MovingTiles tile in movingTiles_Lvl2)
+                _hero.CollisionMovingTiles(tile.rectangle);
         }
 
         public void shootbulletRight(int x, int y)
@@ -532,6 +567,19 @@ namespace Game1
                     coin.Update(gameTime);
             }
 
+            else if(CurrentGameState == GameState.PlayingLvl2)
+            {
+                _hero.Update(gameTime);
+                foreach (MovingTiles tile in movingTiles_Lvl2)
+                    tile.Update(gameTime);
+                CollisionLvl2();
+
+                if (_hero.IsMoving)
+                    camPos.X += _hero.VelocityX.X;
+                if (_hero.IsDead)
+                    camPos.X = 0;
+            }
+
 
             base.Update(gameTime);
         }
@@ -564,13 +612,11 @@ namespace Game1
                 spriteBatch.Draw(background, mainframe, Color.White);
                 spriteBatch.DrawString(font, "Score: " + _hero.Score, new Vector2(750, 0), Color.Black);
                 spriteBatch.DrawString(font, "Hero Life: x" + _hero.HeroLife, new Vector2(0, 0), Color.Black);
-                
                 spriteBatch.End();
 
-                // TODO: Add your drawing code here
+                
                 spriteBatch.Begin(transformMatrix: viewMatrix);
-                // spriteBatch.Begin();
-                spriteBatch.Draw(exitTile, new Vector2(4680, 640), Color.White);
+                exit_Lvl1.Draw(spriteBatch);
                 _hero.Draw(spriteBatch);
                 fire.Draw(spriteBatch);
                 foreach (coin coin in coins)
@@ -610,6 +656,33 @@ namespace Game1
                 foreach (coin coin in coins_SecretLvl)
                     coin.Draw(spriteBatch);
                
+                spriteBatch.End();
+            }
+
+            else if(CurrentGameState == GameState.PlayingLvl2)
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(background, mainframe, Color.White);
+                spriteBatch.DrawString(font, "Score: " + _hero.Score, new Vector2(750, 0), Color.Black);
+                spriteBatch.DrawString(font, "Hero Life: x" + _hero.HeroLife, new Vector2(0, 0), Color.Black);
+                spriteBatch.End();
+
+                spriteBatch.Begin(transformMatrix: viewMatrix);
+                _hero.Draw(spriteBatch);
+
+                foreach (MovingTiles tile in movingTiles_Lvl2)
+                    tile.Draw(spriteBatch);
+
+                map_Lvl2.Draw(spriteBatch);
+                spriteBatch.End();
+            }
+
+
+            else if(CurrentGameState == GameState.End)
+            {
+                spriteBatch.Begin();
+                spriteBatch.DrawString(font, "Yes! You did it!", new Vector2(650, 200), Color.Black);
+                spriteBatch.DrawString(font, "Your score: " + _hero.Score, new Vector2(650, 400), Color.Black);
                 spriteBatch.End();
             }
 
