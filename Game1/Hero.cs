@@ -189,11 +189,10 @@ namespace Game1
         {
             if(rectangle.TouchTopOf(newRectangle))
             {
-                rectangle.Y = newRectangle.Y - rectangle.Height;
-                Positie.Y = newRectangle.Y - rectangle.Height;
-                hasJumped = false;
-                VelocityX.Y = 0f;
-              
+                    rectangle.Y = newRectangle.Y - rectangle.Height;
+                    Positie.Y = newRectangle.Y - rectangle.Height;
+                    hasJumped = false;
+                    VelocityX.Y = 0f;
             }
         }
 

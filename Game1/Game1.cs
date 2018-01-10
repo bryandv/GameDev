@@ -39,7 +39,9 @@ namespace Game1
         Camera2D camera;
         List<coin> coins = new List<coin>();
         List<coin> coins_SecretLvl = new List<coin>();
+        List<coin> coins_Lvl2 = new List<coin>();
         List<Enemy> _Enemys = new List<Enemy>();
+        List<Enemy> _EnemysLvl2 = new List<Enemy>();
         List<BulletRight> bulletsright = new List<BulletRight>();
         List<BulletLeft> bulletsleft = new List<BulletLeft>();
         List<MovingTiles> movingTiles = new List<MovingTiles>();
@@ -47,13 +49,8 @@ namespace Game1
         KeyboardState pastkey;
         private SpriteFont font;
         public Rectangle mainframe;
-        
         #endregion
 
-        
-       // Level level;
-
-        int afstand = 55;
         Vector2 camPos = new Vector2();                         
         float rotation = 0;
         float zoom = 1;
@@ -76,7 +73,7 @@ namespace Game1
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = 1500;
             graphics.PreferredBackBufferHeight = 750;
-            graphics.ApplyChanges();
+            graphics.ApplyChanges();  
             Content.RootDirectory = "Content";
         }
 
@@ -93,6 +90,7 @@ namespace Game1
             map = new Map();
             SecretLvl = new Map();
             map_Lvl2 = new Map();
+
          
             base.Initialize();
         }
@@ -119,6 +117,12 @@ namespace Game1
             _Enemys.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 2149, 650, 1900, 2350));
             _Enemys.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 3191, 365, 3190, 3290));
 
+            _EnemysLvl2.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 1, 436, 0, 220));
+            _EnemysLvl2.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 659, 580, 410, 660));
+            _EnemysLvl2.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 831, 436, 830, 1100));
+            _EnemysLvl2.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 1350, 82, 1340, 1650));
+            _EnemysLvl2.Add(new Enemy(Enemy_afbeeldingR, Enemy_afbeeldingL, 2621, 580, 2620, 2870));
+
             MovingTile_afbeelding = Content.Load<Texture2D>("TileMove");
 
             movingTiles.Add(new MovingTilesLeftRight(MovingTile_afbeelding, 1201, 200, 1200, 1500));
@@ -126,6 +130,7 @@ namespace Game1
             movingTiles.Add(new MovingTilesLeftRight(MovingTile_afbeelding, 3409, 300, 3408, 3800));
 
             movingTiles_Lvl2.Add(new MovingTilesUpDown(MovingTile_afbeelding, 1200, 200, 199, 700));
+            movingTiles_Lvl2.Add(new MovingTilesLeftRight(MovingTile_afbeelding, 2050, 700, 2051, 2500));
 
             coin_afbeelding = Content.Load<Texture2D>("coin2");
             
@@ -188,6 +193,13 @@ namespace Game1
             coins_SecretLvl.Add(new coin(coin_afbeelding, 1310, 495));
             #endregion
 
+            coins_Lvl2.Add(new coin(coin_afbeelding, 0, 300));
+            coins_Lvl2.Add(new coin(coin_afbeelding, 220, 300));
+            coins_Lvl2.Add(new coin(coin_afbeelding, 2494, 160));
+            coins_Lvl2.Add(new coin(coin_afbeelding, 2210, 300));
+            coins_Lvl2.Add(new coin(coin_afbeelding, 1700, 400));
+            coins_Lvl2.Add(new coin(coin_afbeelding, 1920, 400));
+
             exitTile = Content.Load<Texture2D>("exitTile");
             exit_SecretLvl = new ExitTile(exitTile, new Vector2(1310, 650));
             exit_Lvl1 = new ExitTile(exitTile, new Vector2(4680, 640));
@@ -236,31 +248,16 @@ namespace Game1
             map_Lvl2.Generate(new int[,] {
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,3,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,3,3,3,3,3,3,3,3,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {5,3,3,4,0,0,0,0,0,0,0,0,5,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,5,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,5,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,3,3,4,0,0,0,0,0,0,0,0,0,5,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
             }, 71);
-
-
-             //Texture2D blokText = Content.Load<Texture2D>("tilesSpritesheet");
-             //_blok = new Blok(blokText, new Vector2(0, 0+afstand));
-
-            /* level = new Level();
-             level.texture = blokText;
-             level.CreateWorld();
-
-            collideObjecten = new List<ICollide>();
-            collideObjecten.Add(_hero);*/
-             
-            
-            
-
 
         }
 
@@ -284,23 +281,12 @@ namespace Game1
                 for (int i = 0; i < bulletsright.Count; i++)
                 {
                     if (bulletsright[i].rectangle.TouchLeftOf(tile.Rectangle))
-                    {
-                        bulletsright.Remove(bulletsright[i]);
-                        
-                    }
-
+                    { bulletsright.Remove(bulletsright[i]); }
                 }
                 for (int i = 0; i < bulletsleft.Count; i++)
                 {
- 
-                        if (bulletsleft[i].rectangle.TouchLeftOf(tile.Rectangle))
-                        {
-                            bulletsleft.Remove(bulletsleft[i]);
-
-                        }
-
-               
-
+                    if (bulletsleft[i].rectangle.TouchLeftOf(tile.Rectangle))
+                    { bulletsleft.Remove(bulletsleft[i]); }
                 }
             }
 
@@ -393,8 +379,9 @@ namespace Game1
             {
                 CurrentGameState = GameState.PlayingSecretLvl;
             }
-            #endregion  
+            #endregion
 
+            #region exit
             if (_hero.rectangle.TouchLeftOf(exit_Lvl1.rectangle))
             {
                 CurrentGameState = GameState.PlayingLvl2;
@@ -402,7 +389,7 @@ namespace Game1
                 _hero.RespawnPositie = new Vector2(600, 0);
                 
             }
-                
+            #endregion
 
         }
 
@@ -463,26 +450,89 @@ namespace Game1
 
         public void CollisionLvl2()
         {
-            foreach(Tiles tile in map_Lvl2.CollisionTiles)
+            #region Tiles 
+            foreach(CollisionTiles tile in map_Lvl2.CollisionTiles)
             {
                 _hero.Collision(tile.Rectangle, map.Width, map.Height);
+                for (int i = 0; i < bulletsright.Count; i++)
+                {
+                    if (bulletsright[i].rectangle.TouchLeftOf(tile.Rectangle))
+                    {bulletsright.Remove(bulletsright[i]); }
+                }
+                for (int i = 0; i < bulletsleft.Count; i++)
+                {
+                    if (bulletsleft[i].rectangle.TouchLeftOf(tile.Rectangle))
+                    { bulletsleft.Remove(bulletsleft[i]); }
+                }
             }
 
             foreach (MovingTiles tile in movingTiles_Lvl2)
                 _hero.CollisionMovingTiles(tile.rectangle);
+            #endregion
+
+            #region coins
+            foreach (coin coin in coins_Lvl2)
+            {
+                if(_hero.rectangle.TouchBottomOf(coin.rectangle))
+                {
+                    coin.OnScreen = false;
+                    _hero.Score++;
+                }
+                if (_hero.rectangle.TouchTopOf(coin.rectangle))
+                {
+                    coin.OnScreen = false;
+                    _hero.Score++;
+                }
+                if (_hero.rectangle.TouchLeftOf(coin.rectangle))
+                {
+                    coin.OnScreen = false;
+                    _hero.Score++;
+                }
+                if (_hero.rectangle.TouchRightOf(coin.rectangle))
+                {
+                    coin.OnScreen = false;
+                    _hero.Score++;
+                }
+            }
+            #endregion
+
+            #region Enemys
+            foreach (Enemy enemy in _EnemysLvl2)
+                _hero.CollisionEnemy(enemy.rectangle);
+
+            foreach (Enemy enemy in _EnemysLvl2)
+            {
+                if(_hero.rectangle.TouchTopOf(enemy.rectangle))
+                {
+                    enemy.isAlive = false;
+                    _hero.Score += 10;
+                    _hero.Positie.Y -= 5f;
+                    _hero.VelocityX.Y = -12f;
+                }
+
+                for (int i = 0; i < bulletsright.Count; i++)
+                {
+                    if (bulletsright[i].rectangle.TouchLeftOf(enemy.rectangle))
+                    {
+                        bulletsright.Remove(bulletsright[i]);
+                        enemy.isAlive = false;
+                        _hero.Score += 10;
+                    }
+                }
+
+                for (int i = 0; i < bulletsleft.Count; i++)
+                {
+                    if (bulletsleft[i].rectangle.TouchLeftOf(enemy.rectangle))
+                    {
+                        bulletsleft.Remove(bulletsleft[i]);
+                        enemy.isAlive = false;
+                        _hero.Score += 10;
+                    }
+                }
+            }
+            #endregion
         }
 
-        public void shootbulletRight(int x, int y)
-        {
-            BulletRight b = new BulletRight(bullet_afbeeldingRechts, x+50, y+35);
-            bulletsright.Add(b);
-            
-        }
-        public void shootbulletLeft(int x, int y)
-        {
-            BulletLeft b = new BulletLeft(bullet_afbeeldingLinks, x - 50, y+35);
-            bulletsleft.Add(b);
-        }
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
@@ -515,9 +565,17 @@ namespace Game1
                 if (Keyboard.GetState().IsKeyDown(Keys.Space) && pastkey.IsKeyUp(Keys.Space))
                 {
                     if (_hero.direction)
-                        shootbulletRight((int)_hero.Positie.X, (int)_hero.Positie.Y);
+                    {
+                        BulletRight b = new BulletRight(bullet_afbeeldingRechts, (int)_hero.Positie.X + 50, (int)_hero.Positie.Y + 35);
+                        bulletsright.Add(b);
+                    }   
+
                     else
-                        shootbulletLeft((int)_hero.Positie.X, (int)_hero.Positie.Y);
+                    {
+                        BulletLeft b = new BulletLeft(bullet_afbeeldingLinks, (int)_hero.Positie.X - 50, (int)_hero.Positie.Y + 35);
+                        bulletsleft.Add(b);
+                    }
+
                 }
                 pastkey = Keyboard.GetState();
 
@@ -572,7 +630,56 @@ namespace Game1
                 _hero.Update(gameTime);
                 foreach (MovingTiles tile in movingTiles_Lvl2)
                     tile.Update(gameTime);
+
+                foreach (Enemy enemy in _EnemysLvl2)
+                    enemy.Update(gameTime);
+
+                if (Keyboard.GetState().IsKeyDown(Keys.Space) && pastkey.IsKeyUp(Keys.Space))
+                {
+                    if (_hero.direction)
+                    {
+                        BulletRight b = new BulletRight(bullet_afbeeldingRechts, (int)_hero.Positie.X + 50, (int)_hero.Positie.Y + 35);
+                        bulletsright.Add(b);
+                    }
+
+                    else
+                    {
+                        BulletLeft b = new BulletLeft(bullet_afbeeldingLinks, (int)_hero.Positie.X - 50, (int)_hero.Positie.Y + 35);
+                        bulletsleft.Add(b);
+                    }
+
+                }
+                pastkey = Keyboard.GetState();
+
+                foreach (BulletRight Bullet in bulletsright)
+                    Bullet.Update(gameTime);
+
+                foreach (BulletLeft Bullet in bulletsleft)
+                    Bullet.Update(gameTime);
+
+                foreach (coin coin in coins_Lvl2)
+                    coin.Update(gameTime);
+
                 CollisionLvl2();
+
+                for (int i = 0; i < bulletsright.Count; i++)
+                {
+                   
+                    if (bulletsright[i].Positie.X > (_hero.Positie.X + 400))
+                    {
+                        bulletsright.Remove(bulletsright[i]);
+                    }
+
+                }
+                for (int i = 0; i < bulletsleft.Count; i++)
+                {
+                   
+                    if (bulletsleft[i].Positie.X < (_hero.Positie.X - 400))
+                    {
+                        bulletsleft.Remove(bulletsleft[i]);
+                    }
+
+                }
 
                 if (_hero.IsMoving)
                     camPos.X += _hero.VelocityX.X;
@@ -594,9 +701,9 @@ namespace Game1
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
              var viewMatrix = camera.GetViewMatrix();
-              camera.Position = camPos;
+             camera.Position = camPos;
              camera.Rotation = rotation;
-              camera.Zoom = zoom;
+             camera.Zoom = zoom;
 
             if (CurrentGameState == GameState.MainMenu)
             {
@@ -673,10 +780,20 @@ namespace Game1
                 foreach (MovingTiles tile in movingTiles_Lvl2)
                     tile.Draw(spriteBatch);
 
+                foreach (Enemy enemy in _EnemysLvl2)
+                    if (enemy.isAlive)
+                        enemy.Draw(spriteBatch);
+
+                foreach (BulletRight Bullet in bulletsright)
+                    Bullet.Draw(spriteBatch);
+                foreach (BulletLeft Bullet in bulletsleft)
+                    Bullet.Draw(spriteBatch);
+                foreach (coin coin in coins_Lvl2)
+                    coin.Draw(spriteBatch);
+
                 map_Lvl2.Draw(spriteBatch);
                 spriteBatch.End();
             }
-
 
             else if(CurrentGameState == GameState.End)
             {
@@ -686,10 +803,7 @@ namespace Game1
                 spriteBatch.End();
             }
 
-
-
-
-                base.Draw(gameTime);
+            base.Draw(gameTime);
         }
     }
 }
