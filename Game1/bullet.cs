@@ -62,5 +62,22 @@ namespace Game1
         }
     }
 
+    class BulletEnemy : bullet
+    {
+        
+        public BulletEnemy(Texture2D texture,int PosX,int PosY)
+        {
+            _texture = texture;
+            Positie = new Vector2(PosX, PosY);
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            speed = 5;
+            Positie.X -= speed;
+            rectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 60, 35);
+        }
+    }
+
 
 }
