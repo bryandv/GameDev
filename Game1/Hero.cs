@@ -35,7 +35,11 @@ namespace Game1
         public bool direction = true;
         public int Score = 0;
         public int HeroLife = 3;
-    
+        int count = 0;
+        int count2 = 0;
+        int countbullet = 0;
+        int countbullet2 = 0;
+
         public Hero(Texture2D textureR,Texture2D textureL)
         {
             _textureR = textureR;
@@ -66,10 +70,6 @@ namespace Game1
             rectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 75,80);
            
             Input(gameTime);
-            /*if (VelocityX.Y < 10)
-            {
-                VelocityX.Y += 0.4f;
-            }*/
 
             if (IsDead == false)
                 VelocityX.Y += 0.4f;
@@ -77,11 +77,6 @@ namespace Game1
             {
                 Positie = RespawnPositie;
                 HeroLife--;
-               
-             /*   if (HeroLife == 0)
-                {
-                    HeroLife = 3;
-                }*/
                 IsDead = false;
             }
   
@@ -175,13 +170,25 @@ namespace Game1
            
             if(rectangle.TouchLeftOf(newRectangle))
             {
-                IsDead = true;
-                RespawnPositie = new Vector2(600, 100);
+                count++;
+                if(count == 2) //zorgt ervoor dat er maar 1 leven afgaat in plaats van 2
+                {
+                    IsDead = true;
+                    RespawnPositie = new Vector2(600, 100);
+                    count = 0;
+                }
+
+                
             }
             if (rectangle.TouchRightOf(newRectangle))
             {
-                IsDead = true;
-                RespawnPositie = new Vector2(600, 100);
+                count2++;
+                if (count2 == 2)
+                {
+                    IsDead = true;
+                    RespawnPositie = new Vector2(600, 100);
+                    count2 = 0;
+                }
             }
         }
 
@@ -198,15 +205,34 @@ namespace Game1
 
         public void CollisionEnemyBullet(Rectangle newRectangle)
         {
-            if (rectangle.TouchBottomOf(newRectangle))
-                IsDead = true;
+                
             if (rectangle.TouchLeftOf(newRectangle))
-                IsDead = true;
+            {
+                countbullet++;
+                if (countbullet == 2)
+                {
+                    IsDead = true;
+                    RespawnPositie = new Vector2(600, 100);
+                    Console.WriteLine("left");
+                    countbullet = 0;
+                }
+   
+
+            }
+                
             if (rectangle.TouchRightOf(newRectangle))
-                IsDead = true;
-            if (rectangle.TouchTopOf(newRectangle))
-                IsDead = true;
-        }
+            {
+                countbullet2++;
+                if (countbullet2 == 2)
+                {
+                    IsDead = true;
+                    RespawnPositie = new Vector2(600, 100);
+                    Console.WriteLine("left");
+                    countbullet = 0;
+                }
+            }
+    
+    }
 
         public void Draw(SpriteBatch spriteBatch)
         {

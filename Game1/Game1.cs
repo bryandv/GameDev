@@ -60,7 +60,7 @@ namespace Game1
         List<Kanon> Kannonen = new List<Kanon>();
         int damageEndBoss = 0;
         KeyboardState pastkey;
-        int count1=0, count2=0, count3 = 0;
+        int count1 = 1;
         EndBoss endBoss;
         Kanon kanon;
         private SpriteFont font;
@@ -413,6 +413,7 @@ namespace Game1
             {
                 CurrentGameState = GameState.PlayingSecretLvl;
                 _hero.IsDead = true;
+                _hero.HeroLife++;
                 _hero.RespawnPositie = new Vector2(200,0);
             }
             if (_hero.rectangle.TouchRightOf(fire.rectangle))
@@ -434,6 +435,7 @@ namespace Game1
             {
                 CurrentGameState = GameState.PlayingLvl2;
                 _hero.IsDead = true;
+                _hero.HeroLife++;
                 _hero.RespawnPositie = new Vector2(600, 0);
                 
             }
@@ -491,6 +493,7 @@ namespace Game1
 
             if (_hero.rectangle.TouchTopOf(exit_SecretLvl.rectangle))
             {
+                _hero.HeroLife++;
                 _hero.IsDead = true;
                 _hero.RespawnPositie = new Vector2(2950, 100);
                 camPos = new Vector2(2350, 0);
@@ -588,8 +591,8 @@ namespace Game1
             {
                 if (_hero.rectangle.TouchTopOf(Kannonen[i].rectangle))
                 {
-                    Console.WriteLine(i);
                     Kannonen.Remove(Kannonen[i]);
+                    _hero.Score += 10;
                 }
                     
             }
@@ -608,10 +611,7 @@ namespace Game1
                 }
 
             }
-            if (damageEndBoss >= 20)
-            {
-                endBoss.IsAlive = false;
-            }
+
             if (_hero.rectangle.TouchLeftOf(endBoss.rectangle))
                 _hero.IsDead = true;
 
@@ -632,6 +632,11 @@ namespace Game1
             if (_hero.HeroLife <= 0)
             {
                 CurrentGameState = GameState.Dead;
+            }
+            if((endBoss.IsAlive == false)&& (count1 == 1))
+            {
+                _hero.Score += 50;
+                count1 = 0;
             }
         }
 
@@ -655,7 +660,6 @@ namespace Game1
 
         public void OnTimeEvent3(object source, ElapsedEventArgs e)
         {
-            Console.WriteLine(e.SignalTime);
             if(damageEndBoss < 20)
             {
                 if ((endBoss.rectangle.X - _hero.Positie.X) < 500)
