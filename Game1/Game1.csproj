@@ -44,7 +44,6 @@
     <Compile Include="Animation.cs" />
     <Compile Include="AnimationFrame.cs" />
     <Compile Include="Bediening.cs" />
-    <Compile Include="Blok.cs" />
     <Compile Include="bullet.cs" />
     <Compile Include="Camera2D.cs" />
     <Compile Include="Kanon.cs" />
@@ -54,7 +53,6 @@
     <Compile Include="ExitTile.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Hero.cs" />
-    <Compile Include="ICollide.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MovingTiles.cs" />
     <Compile Include="Program.cs" />

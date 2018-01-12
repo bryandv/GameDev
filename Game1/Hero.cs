@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Game1
 {
     
-   public class Hero : ICollide
+   public class Hero 
     {
         Matrix m;
 
@@ -240,10 +240,7 @@ namespace Game1
         }
 
 
-        public Rectangle GetCollisionRectangle()
-        {
-            return CollisionRectangle;
-        }
+       
 
 
     }
