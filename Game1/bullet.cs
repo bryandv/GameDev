@@ -75,7 +75,7 @@ namespace Game1
         {
             speed = 5;
             Positie.X -= speed;
-            rectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 60, 35);
+            rectangle = new Rectangle((int)Positie.X, (int)Positie.Y, 60, 30);
         }
     }
 

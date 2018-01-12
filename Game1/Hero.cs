@@ -78,10 +78,10 @@ namespace Game1
                 Positie = RespawnPositie;
                 HeroLife--;
                
-                if (HeroLife == 0)
+             /*   if (HeroLife == 0)
                 {
                     HeroLife = 3;
-                }
+                }*/
                 IsDead = false;
             }
   
@@ -194,6 +194,18 @@ namespace Game1
                     hasJumped = false;
                     VelocityX.Y = 0f;
             }
+        }
+
+        public void CollisionEnemyBullet(Rectangle newRectangle)
+        {
+            if (rectangle.TouchBottomOf(newRectangle))
+                IsDead = true;
+            if (rectangle.TouchLeftOf(newRectangle))
+                IsDead = true;
+            if (rectangle.TouchRightOf(newRectangle))
+                IsDead = true;
+            if (rectangle.TouchTopOf(newRectangle))
+                IsDead = true;
         }
 
         public void Draw(SpriteBatch spriteBatch)

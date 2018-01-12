@@ -45,6 +45,7 @@ namespace Game1
         SpecialTile fire;
         ExitTile exit_Lvl1;
         ExitTile exit_SecretLvl;
+        ExitTile exit_Lvl2;
         Camera2D camera;
         List<coin> coins = new List<coin>();
         List<coin> coins_SecretLvl = new List<coin>();
@@ -57,8 +58,9 @@ namespace Game1
         List<MovingTiles> movingTiles_Lvl2 = new List<MovingTiles>();
         List<BulletEnemy> bulletEnemy = new List<BulletEnemy>();
         List<Kanon> Kannonen = new List<Kanon>();
+        int damageEndBoss = 0;
         KeyboardState pastkey;
-        
+        int count1=0, count2=0, count3 = 0;
         EndBoss endBoss;
         Kanon kanon;
         private SpriteFont font;
@@ -66,6 +68,7 @@ namespace Game1
 
         private static Timer aTimer;
         private static Timer bTimer;
+        private static Timer cTimer;
         #endregion
 
         Vector2 camPos = new Vector2();                         
@@ -82,7 +85,7 @@ namespace Game1
             Dead,
         }
 
-        GameState CurrentGameState = GameState.PlayingLvl2;
+        GameState CurrentGameState = GameState.MainMenu;
 
 
         public Game1()
@@ -109,14 +112,19 @@ namespace Game1
             map_Lvl2 = new Map();
             aTimer = new Timer();
             bTimer = new Timer();
+            cTimer = new Timer();
             aTimer.Interval = 1000;
             bTimer.Interval = 1500;
+            cTimer.Interval = 1300;
             aTimer.Elapsed += OnTimeEvent;
             bTimer.Elapsed += OnTimeEvent2;
+            cTimer.Elapsed += OnTimeEvent3;
             aTimer.AutoReset = true;
             aTimer.Enabled = true;
             bTimer.AutoReset = true;
             bTimer.Enabled = true;
+            cTimer.AutoReset = true;
+            cTimer.Enabled = true;
             base.Initialize();
         }
 
@@ -156,6 +164,7 @@ namespace Game1
 
             movingTiles_Lvl2.Add(new MovingTilesUpDown(MovingTile_afbeelding, 1200, 200, 199, 700));
             movingTiles_Lvl2.Add(new MovingTilesLeftRight(MovingTile_afbeelding, 2050, 700, 2051, 2500));
+            movingTiles_Lvl2.Add(new MovingTilesLeftRight(MovingTile_afbeelding, 5001, 500, 5000, 6100));
 
             coin_afbeelding = Content.Load<Texture2D>("coin2");
             
@@ -228,7 +237,7 @@ namespace Game1
             exitTile = Content.Load<Texture2D>("exitTile");
             exit_SecretLvl = new ExitTile(exitTile, new Vector2(1310, 650));
             exit_Lvl1 = new ExitTile(exitTile, new Vector2(4680, 640));
-
+            exit_Lvl2 = new ExitTile(exitTile, new Vector2(6800, 640));
             font = Content.Load<SpriteFont>("Score");
             fireTile = Content.Load<Texture2D>("SpecialTile");
             fire = new SpecialTile(fireTile, new Vector2(3110, 650));
@@ -242,8 +251,8 @@ namespace Game1
             kanon_afbeelding = Content.Load<Texture2D>("Canon");
             kanon = new Kanon(kanon_afbeelding,new Vector2(4540,450));
             Kannonen.Add(kanon);
-            Kannonen.Add(new Kanon(kanon_afbeelding, new Vector2(4100, 660)));
-            Kannonen.Add(new Kanon(kanon_afbeelding, new Vector2(4800, 660)));
+            Kannonen.Add(new Kanon(kanon_afbeelding, new Vector2(4000, 660)));
+            Kannonen.Add(new Kanon(kanon_afbeelding, new Vector2(4825, 590)));
 
             kanonBullet_afbeelding = Content.Load<Texture2D>("BowserBullet");
            
@@ -284,17 +293,17 @@ namespace Game1
             }, 71);
 
             map_Lvl2.Generate(new int[,] {
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,3,3,3,3,3,3,3,3,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {5,3,3,4,0,0,0,0,0,0,0,0,5,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,2,0,0,0,2,3,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,2,2,0,0,0,2,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,5,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,3,3,4,0,0,0,0,0,0,0,0,0,5,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,3,3,3,3,3,3,3,3,3,3,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,3,3,3,3,3,3,3,3,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {5,3,3,4,0,0,0,0,0,0,0,0,5,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,2,0,0,0,2,3,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,2,2,0,0,0,2,2,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,5,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,3,3,4,0,0,0,0,0,0,0,0,0,5,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,3,3,3,3,3,3,3,3,3,3,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,3,3,3,3,3,3,3,3,3},
             }, 71);
 
         }
@@ -429,6 +438,11 @@ namespace Game1
                 
             }
             #endregion
+
+            if (_hero.HeroLife <= 0)
+            {
+                CurrentGameState = GameState.Dead;
+            }
 
         }
 
@@ -569,23 +583,87 @@ namespace Game1
                     }
                 }
             }
+
+            for (int i = 0; i < Kannonen.Count; i++)
+            {
+                if (_hero.rectangle.TouchTopOf(Kannonen[i].rectangle))
+                {
+                    Console.WriteLine(i);
+                    Kannonen.Remove(Kannonen[i]);
+                }
+                    
+            }
+
+            for (int i = 0; i < bulletsright.Count; i++)
+            {
+                if(bulletsright[i].rectangle.TouchLeftOf(endBoss.rectangle))
+                {
+                    damageEndBoss++;
+                    bulletsright.Remove(bulletsright[i]);
+                    Console.WriteLine(damageEndBoss);
+                }
+                if(damageEndBoss >= 20)
+                {
+                    endBoss.IsAlive = false;
+                }
+
+            }
+            if (damageEndBoss >= 20)
+            {
+                endBoss.IsAlive = false;
+            }
+            if (_hero.rectangle.TouchLeftOf(endBoss.rectangle))
+                _hero.IsDead = true;
+
+
+            foreach (BulletEnemy bullet in bulletEnemy)
+                _hero.CollisionEnemyBullet(bullet.rectangle);
+
+
+
+
             #endregion
+
+            #region End
+            if (_hero.rectangle.TouchLeftOf(exit_Lvl2.rectangle))
+                CurrentGameState = GameState.End;
+            #endregion
+
+            if (_hero.HeroLife <= 0)
+            {
+                CurrentGameState = GameState.Dead;
+            }
         }
 
         public void OnTimeEvent(object source, ElapsedEventArgs e)
         {  
-          if((Kannonen[0].Positie.X - _hero.Positie.X) <700)
-          {
-            bulletEnemy.Add(new BulletEnemy(kanonBullet_afbeelding, (int)kanon.Positie.X, (int)kanon.Positie.Y));
-          }
+          if(Kannonen.Count>0)
+            if((Kannonen[0].Positie.X - _hero.Positie.X) <700)
+                bulletEnemy.Add(new BulletEnemy(kanonBullet_afbeelding, (int)kanon.Positie.X, (int)kanon.Positie.Y));
+          
         }
 
         public void OnTimeEvent2(object source, ElapsedEventArgs e)
         {
-            if ((Kannonen[1].Positie.X - _hero.Positie.X) < 700)
+            if(Kannonen.Count > 1)
             {
-                bulletEnemy.Add(new BulletEnemy(kanonBullet_afbeelding, (int)Kannonen[1].Positie.X, (int)Kannonen[1].Positie.Y));
+                if ((Kannonen[1].Positie.X - _hero.Positie.X) < 700)
+                    bulletEnemy.Add(new BulletEnemy(kanonBullet_afbeelding, (int)Kannonen[1].Positie.X, (int)Kannonen[1].Positie.Y));
             }
+                 
+        }
+
+        public void OnTimeEvent3(object source, ElapsedEventArgs e)
+        {
+            Console.WriteLine(e.SignalTime);
+            if(damageEndBoss < 20)
+            {
+                if ((endBoss.rectangle.X - _hero.Positie.X) < 500)
+                {
+                    bulletEnemy.Add(new BulletEnemy(kanonBullet_afbeelding, (int)endBoss.rectangle.X, (int)endBoss.rectangle.Y));
+                }
+            }
+
         }
 
         /// </summary>
@@ -716,10 +794,6 @@ namespace Game1
                     coin.Update(gameTime);
 
                 endBoss.Update(gameTime);
-
-
-               
-
                 foreach (BulletEnemy Bullet in bulletEnemy)
                     Bullet.Update(gameTime);
 
@@ -743,6 +817,14 @@ namespace Game1
                     }
 
                 }
+
+                for (int i = 0; i < bulletEnemy.Count; i++)
+                {
+                    if (bulletEnemy[i].Positie.X < 3500)
+                        bulletEnemy.Remove(bulletEnemy[i]);
+                }
+
+
 
                 if (_hero.IsMoving)
                     camPos.X += _hero.VelocityX.X;
@@ -771,6 +853,8 @@ namespace Game1
             if (CurrentGameState == GameState.MainMenu)
             {
                 spriteBatch.Begin();
+                spriteBatch.Draw(background, mainframe, Color.White);
+                //spriteBatch.DrawString(font, "press enter to start ", new Vector2(0, 0), Color.Black, 0, new Vector2(0, 0),2 , 0, 0);
                 spriteBatch.DrawString(font, "press enter to start", new Vector2((GraphicsDevice.Viewport.Width / 2) - 150, 375), Color.Black);
                 spriteBatch.End();
             }
@@ -780,6 +864,7 @@ namespace Game1
                 #region GameLvl1;
                 spriteBatch.Begin();
                 spriteBatch.Draw(background, mainframe, Color.White);
+                
                 spriteBatch.DrawString(font, "Score: " + _hero.Score, new Vector2(750, 0), Color.Black);
                 spriteBatch.DrawString(font, "Hero Life: x" + _hero.HeroLife, new Vector2(0, 0), Color.Black);
                 spriteBatch.End();
@@ -855,8 +940,12 @@ namespace Game1
                     Bullet.Draw(spriteBatch);
                 foreach (coin coin in coins_Lvl2)
                     coin.Draw(spriteBatch);
-
-                endBoss.Draw(spriteBatch);
+                if(damageEndBoss < 20)
+                    endBoss.Draw(spriteBatch);
+                else
+                    exit_Lvl2.Draw(spriteBatch);
+                
+                
                 
                 foreach (Kanon kanon in Kannonen)
                     kanon.Draw(spriteBatch);
@@ -864,10 +953,20 @@ namespace Game1
                 map_Lvl2.Draw(spriteBatch);
                 spriteBatch.End();
             }
+            
+            else if(CurrentGameState == GameState.Dead)
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(background, mainframe, Color.White);
+                spriteBatch.DrawString(font, "Game Over!", new Vector2(650, 200), Color.Black);
+                spriteBatch.DrawString(font, "Your score: " + _hero.Score, new Vector2(650, 400), Color.Black);
+                spriteBatch.End();
+            }
 
             else if(CurrentGameState == GameState.End)
             {
                 spriteBatch.Begin();
+                spriteBatch.Draw(background, mainframe, Color.White);
                 spriteBatch.DrawString(font, "Yes! You did it!", new Vector2(650, 200), Color.Black);
                 spriteBatch.DrawString(font, "Your score: " + _hero.Score, new Vector2(650, 400), Color.Black);
                 spriteBatch.End();

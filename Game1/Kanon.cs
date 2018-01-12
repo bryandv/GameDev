@@ -11,18 +11,19 @@ namespace Game1
     class Kanon
     {
         private Texture2D _texture;
-        private Rectangle rectangle;
+        public Rectangle rectangle;
         public Vector2 Positie;
 
         public Kanon(Texture2D texture,Vector2 positie)
         {
             _texture = texture;
             Positie = positie;
+            rectangle = new Rectangle((int)Positie.X, (int)Positie.Y, _texture.Width, _texture.Height);
         }
 
         public void Update(GameTime gameTime)
         {
-
+            
         }
 
         public void Draw(SpriteBatch spriteBatch)
